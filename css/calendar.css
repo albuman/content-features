@@ -1,0 +1,145 @@
+		
+		.container{
+			position: fixed;
+			background-color: rgba(31, 29, 29, 0.75);
+			min-width: 100%;
+			min-height: 100%;
+			top: 0;
+			left: 0;
+			
+			
+		}
+		.calendWrap{
+			position: relative;
+			z-index: 1;
+
+			margin: auto;
+			margin-top: 15px;
+			width:300px;
+		}
+		.todayWrap{
+			padding: 10%;
+			position: relative;
+			text-align: center;
+			background-image: linear-gradient(120deg , #191a1c 50%, #2a2b2d 50%);
+			color: #f7f7f7;		
+			font-family: 'Open Sans', sans-serif;
+			box-shadow: 2px 3px 7px #bdb9b9;
+			
+
+		}
+		.todayWrap:before, .todayWrap:after{
+			content:"";
+			display: block;
+			position: absolute;
+			top:-10px;
+			height: 30px;
+			width: 15px;
+			background-color: #191a1c;
+			border-radius: 3px;
+			border: 1px solid #03a51b;
+		}
+		.todayWrap:before{
+			left: 20%;
+			
+		}
+		.todayWrap:after{
+			right:20%;
+		}
+		.todayWrap .todayDateBlock{
+			font-size: 9em;
+			display: block;
+		}
+		.todayWrap .todayBlock{
+			font-size: 2em;
+			font-weight: 600;
+			display: block;
+		}
+		.monthContainer{
+			position: relative;
+			background-color: #f7f7f7;
+			font-family: 'Roboto', sans-serif;
+			padding: 20px;
+			margin-top: 20px;
+			box-shadow: 2px 3px 7px #bdb9b9;
+		}
+		.monthWrap{
+			text-align: center;
+			margin-bottom: 20px;
+		}
+		.monthLine{
+			font-size: 1.6em;
+			font-weight: 500;
+		}
+		.prevMonth, .nextMonth{
+			display:block;
+			cursor: pointer;
+			position: absolute;
+			top: 150px;
+			padding:0 20px 0 20px;
+			background-color: #03a51b;
+			width:20px;
+			z-index: -2;
+			font-size:3em;
+			color: #161616;
+			transition: .3s;
+
+		}
+		.nextMonth{
+			border-radius: 0 3px 3px 0;
+			right:-60px;
+			box-shadow: -2px 3px 6px #03a51b;
+			
+		}
+		.prevMonth{
+			border-radius: 3px 0 0 3px;
+			left: -60px;
+			box-shadow: 2px 3px 6px #03a51b;
+
+		}
+		.prevMonth:active, .nextMonth:active{
+			box-shadow:none;
+		}
+
+		.daysNames{
+			width: 100%;
+			text-align: center;
+
+		}
+		table{
+			border-collapse: collapse;
+		}
+		tbody>tr{
+			font-weight: 600;
+			line-height: 2em;
+			text-transform: uppercase;
+			color: #03a51b;
+			border-top: 2px solid #efefef;
+			border-bottom: 2px solid #efefef;
+
+			
+		}
+		table>tr{
+			
+			font-weight: 600;
+			line-height: 2.4em;
+		}
+		td{
+
+		}
+		td a {
+			box-sizing: border-box;
+			cursor: pointer;
+			display: block;
+			margin: auto;
+			line-height: 30px;
+			border: 1px solid transparent;
+			color: black;
+
+
+		}
+		td a:active{
+			
+			border: 1px solid #90b871;
+			border-radius: 50%;
+		}

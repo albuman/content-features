@@ -1,0 +1,24 @@
+{
+  "manifest_version": 2, // Начиная с Chrome 18 ставим 2, иначе 1 (не поддерживается такое старьё)
+  "name": "Content-manager features", // Название расширения
+  "version": "1.2", // Версия расширения
+  "permissions": [
+		"tabs",
+		"webRequest",
+		"activeTab",
+		"http://mta.ua/*"
+  ],
+ "content_scripts": [
+    {
+      "matches": ["http://mta.ua/*"],
+      "js": ["js/jquery.js", "js/jquery-ui.js", "content/copyPaste.js", "content/slidePatch.js", "content/templatesModified.js"],
+	  "css":["css/templates.css"],
+	  "run_at": "document_end"
+    }
+  ],
+  "browser_action": {
+    "default_title": "Content-manager features", // Заголовок, который отображается при наведении
+    "default_icon": "img/search.png", // Иконка для отображения
+    "default_popup": "popup.html" // страница (окно), которая будет отображаться при клике на иконку 
+  }
+}

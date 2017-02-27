@@ -1,0 +1,166 @@
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		body{
+			margin:0;
+			transition: .5s height;
+			background-size: cover;
+			background-color: #2d2b2b;
+		}
+		div.contain {
+			overflow: hidden;
+		}
+		div.contain div.wrap{
+			width: 600px;
+			margin:0;
+			padding: 5px;
+			text-align: center;
+		}
+
+		a {
+			cursor: pointer;
+		}
+		/*TRIGGER BLOCK*/
+		
+		div.wrap div.trigger {
+			border-radius: 3px;
+			width: 50%;
+			margin: auto;
+			overflow: hidden;
+		}
+		div.wrap div.trigger label{
+			padding: 5px 0;
+			width: 50%;
+			display: inline-block;
+			background-color: rgba(3, 165, 27, .3);
+			color: #6d6b6b;
+			cursor: pointer;
+		}
+		div.wrap div.trigger label.active{
+			background-color: #03a51b;
+			color: black;
+		}
+		div.wrap div.trigger label input{
+			display: none;
+		}
+		div.wrap div.trigger label span{
+			font-size: 1.3em;
+		}
+		
+
+		/*INNER BLOCK*/
+
+		div.wrap div#inner {
+			
+		}
+		div.wrap div#inner a.openTabs {
+			line-height: 50px;
+			display: inline-block;
+			width: 20%;
+			background-color: #03a51b;
+			border-radius: 3px;
+			font-size: 1.3em;
+		}
+		
+		div.wrap div#inner div.checkInfo {
+			width: 100%;
+			margin: 10px auto 0 auto;
+			border-radius: 3px; 
+			overflow: hidden;
+		}
+		div.wrap div#inner div.checkInfo input{
+			width: 80%;
+			color: #9f9f9f;
+			border: none;
+			line-height: 50px;
+			padding-left: 5px;
+			background-color: rgba(3, 165, 27, .3);
+		}
+		input#area::-webkit-input-placeholder{
+			font-size: 1.3em;
+			color: #6d6b6b;
+		}
+		div.wrap div#inner div.checkInfo a {
+			width: 20%;
+			line-height: 50px;
+			display: inline-block;
+			background-color: #03a51b;
+			float: right;
+			font-size: 1.3em;
+		}
+		div.wrap div#inner div.positionContainer {
+			margin-top: 10px;
+			overflow: hidden;
+			position: relative;
+		}
+		div.wrap div#inner div.positionContainer ol.feeds{
+			text-align: left;
+			list-style: none;
+		}
+		div.wrap div#inner div.positionContainer ol.checked{
+			width: 50%;
+
+		}
+		div.wrap div#inner div.positionContainer div.toCop {
+			width: 49%;
+			position: absolute;
+			border-radius: 3px;
+			overflow: hidden;
+			top: 0;
+			bottom: 0;
+			right: 0;
+			margin-bottom: 5px;
+		}
+		div.wrap div#inner div.positionContainer textarea {
+			width: 100%;
+			height: 100%;
+			border: none;
+			resize: none;
+			padding: 5px;
+
+		}
+		div.wrap div#inner div.positionContainer ol li {
+			border: 1px solid #03a51b;
+			border-radius: 3px;
+			margin-bottom: 5px;
+			padding: 5px;
+
+		}
+		div.wrap div#inner div.positionContainer ol li a {
+			text-decoration: none;
+			color: #9a9a9a;
+			font-size: 1.2em;
+		}
+		div.wrap div#inner div.positionContainer ol li p {
+			color: #9a9a9a;
+		}
+		div.wrap div#inner div.mask {
+			position: fixed;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			background: url('../img/loading.gif') center center rgba(31, 30, 30, 0.58) no-repeat;
+			background-size: 15%;
+			z-index: 99;
+		}
+		/*HISTORY BLOCK*/
+
+		div.wrap div.history {
+			position: fixed;
+			bottom: 0;
+			right: 0;
+			width: 50px;
+			height: 50px;
+			border-radius: 50%;
+			background-color:  #03a51b;
+			cursor: pointer;
+			margin: 5px; 
+
+		}
+		div.wrap div.history img {
+			height: 100%;
+			transform: scale(.6);
+		}
+		
