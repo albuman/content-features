@@ -1,8 +1,5 @@
 # content-features
 content app
-Для сохранения истории : 
- - скачать или клонировать
- - удалить все из существующей папки 
- - извлечь или скопировать все файлы в предыдущую папку
- - запустить браузер.
+ - git clone https://github.com/albuman/content-features.git
+ - git pull
  
