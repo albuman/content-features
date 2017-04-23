@@ -1,4 +1,4 @@
-define(['react', 'feeds', 'findPosition', '../components/feedsList', '../components/positionList'], 
+define(['../../js/react', 'feeds', 'findPosition', './/feedsList', './/positionList'],
 	function(React, feeds, findPosition, feedsList, positionList){
 	const create = React.createElement;
 	class InputWrapper extends React.Component {

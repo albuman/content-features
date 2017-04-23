@@ -1,0 +1,40 @@
+{
+  "name": "content-features",
+  "version": "2.0.0",
+  "description": "FS_integration",
+  "main": "server.js",
+  "scripts": {
+    "test": "npm test",
+    "start": "node app/server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/albuman/content-features.git"
+  },
+  "author": "r.sainchuck",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/albuman/content-features/issues"
+  },
+  "homepage": "https://github.com/albuman/content-features#readme",
+  "babel": {
+    "presets": [
+      "stage-0",
+      "es2015",
+      "react"
+    ],
+    "plugins": [
+      "jsx"
+    ]
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-plugin-syntax-jsx": "^6.18.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "webpack": "^2.4.1"
+  }
+}

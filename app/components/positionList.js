@@ -1,4 +1,4 @@
-define(['react'], function(React){
+define(['../../js/react'], function(React){
 	var create = React.createElement;
 	class FeedsList extends React.Component {
 		constructor(props){

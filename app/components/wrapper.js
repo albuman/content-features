@@ -1,4 +1,4 @@
-define(['react', '../components/inputPlace', 'calendar'], function(React, inputWrapper, calendar){
+define(['../../js/react', './/inputPlace', 'calendar'], function(React, inputWrapper, calendar){
 		var create =  React.createElement;
 		class Wrapper extends React.Component {
 			  constructor(props){
