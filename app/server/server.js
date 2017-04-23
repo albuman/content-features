@@ -2,19 +2,28 @@ var http = require('http');
 var fs = require('fs');
 const port = 80;
 const host = 'localhost';
-function requestHandle(req, res){
-   var html = fs.createReadStream('popup.html');
-   html.on('readable', function(){
-       var chunk = html.read();
-       if(chunk){
-           res.write(chunk, 'utf8')
-       }
+function requestHandle(req, res, err){
+    var requestedFile;
+   if(req.url == '/'){
+       requestedFile = fs.createReadStream('popup.html');
+       
+   } else {
+       requestedFile = fs.createReadStream('.' + req.url);
+   }
+    requestedFile.on('readable', function(){
+        var chunk = requestedFile.read();
+        console.log(chunk);
+        if(chunk){
+            res.write(chunk, 'utf8')
+        }
 
-   });
-   html.on('end', function(){
-       res.end()
-    })
-
+    });
+    requestedFile.on('end', function(){
+        res.end()
+    });
+    if(err){
+        console.log(err)
+    }
 
 }
 function listenHandle(req, res){
