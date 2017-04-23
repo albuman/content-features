@@ -47,4 +47,6 @@ Temporary Items
 .apdisk
 
 #Data folder with position codes
-data/*.txt
+data/*
+node_modules
+.idea
