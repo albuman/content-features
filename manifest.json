@@ -11,14 +11,14 @@
  "content_scripts": [
     {
       "matches": ["http://mta.ua/*"],
-      "js": ["js/jquery.js", "js/jquery-ui.js", "content/copyPaste.js", "content/slidePatch.js", "content/templatesModified.js"],
-	  "css":["css/templates.css"],
+      "js": ["app/js/lib/jquery.js", "app/js/lib/jquery-ui.js", "app/js/content/copyPaste.js", "app/js/content/slidePatch.js", "app/js/content/templatesModified.js"],
+	  "css":["app/css/templates.css"],
 	  "run_at": "document_end"
     }
   ],
   "browser_action": {
     "default_title": "Content-manager features", // Заголовок, который отображается при наведении
-    "default_icon": "img/search.png", // Иконка для отображения
-    "default_popup": "popup.html" // страница (окно), которая будет отображаться при клике на иконку 
+    "default_icon": "app/img/search.png", // Иконка для отображения
+    "default_popup": "index.html" // страница (окно), которая будет отображаться при клике на иконку 
   }
 }

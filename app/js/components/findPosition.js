@@ -1,4 +1,4 @@
-
+import $ from 'jquery';
 var settings = {
 	query : 'http://mta.ua/index.php?route=product/product&path=2&product_id=',
 	search: 'http://mta.ua/search?description=true&search='
@@ -6,7 +6,6 @@ var settings = {
 
 function findPosition(code){
 	return $.get(settings.search + code)
-		  	.then(html=>($.parseHTML(html)))
 		  	.then((dom)=>{
 		  		var name ,
 		  			position;

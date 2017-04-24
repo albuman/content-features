@@ -1,6 +1,6 @@
 import React from 'react';
 import InputWrapper from './inputPlace';
-//import calendar from 'calendar';
+import {calendar} from './calendar';
 
 class Wrapper extends React.Component {
 	constructor(props){

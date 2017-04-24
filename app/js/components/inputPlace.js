@@ -1,4 +1,5 @@
 import React from 'react';
+import $ from 'jquery';
 import feeds from './feeds';
 import findPosition from './findPosition';
 import feedsList from './feedsList';
@@ -50,7 +51,6 @@ class InputWrapper extends React.Component {
 	}
 	inputHandler(e){
 		this.setState({inputValue: e.target.value}) // СТАВИМ В СОСТОЯНИЕ ЗНАЧЕНИЕ ИНПУТА ДЛЯ ПОИСКА
-		console.log(e.target.value)
 	}
 	findFeedbacks(value){
 		this.setState({found : [], fetching : true}); // ЧИСТИМ СТАРЫЕ ПОЗИЦИИ / ПЕРЕКЛЮЧАЕМ В ПРОЦЕСС ПОИСКА ОЗЫВОВ И БЛОКИРУЕМ UI
@@ -81,15 +81,8 @@ class InputWrapper extends React.Component {
 		this.setState({found : [], fetching : true}); // ЧИСТИМ СТАРЫЕ ПОЗИЦИИ / ПЕРЕКЛЮЧАЕМ В ПРОЦЕСС ПОИСКА ПОЗИЦИЙ И БЛОКИРУЕМ UI
 		var positions = inputValue;
 		if(positions.length < 1){ // ЕСЛИ ВВЕДЕНО МЕНЬШЕ 1-ГО ЗНАКА (НИЕГО НЕ ВВЕДЕНО) - ЗАПУСКАЕМ ПОИСК С ПОЗИЦИЯМИ В ФАЙЛЕ data/dir.txt
-			fetch(chrome.extension.getURL('../data/dir.txt'))
-			.then(response=>{
-				if(response.ok) // ЕСЛИ URL ПРАВИЛЬНЫЙ И ФАЙЛ СУЩЕСТВУЕТ - ПОЛУЧИМ RESPONSE.OK = TRUE
-					return response.text()
-				else {
-					return new Error(`Can't load file ${response.url}.`)
-				}
-			})
-			.then(text=>{
+			$.get('/data/dir.txt')
+			.done(text=>{
 				this.setState({inputValue : text.replace(/\s/g, ' ')}) // СТАВИМ В ИНПУТ ЗНАЧЕНИЕ ФАЙЛА ДЛЯ НАГЛЯДНОСТИ ИСПОЛЬЗУЯ РЕГ. ВЫРАЖЕНИЯ ДЛЯ ЗАМЕНЫ ЛЮБОГО ПРОБЕЛЬНОГО СИМВОЛА
 				return check.call(this, text)
 				}) // ВЫЗЫВАЕМ ФУНКЦИЮ CHECK С СОДЕРЖИМЫМ ФАЙЛА В КАЧЕСТВЕ АВРГУМЕНТА, т.к. ФУНКЦИЯ ОБЬЯВЛЕНА НЕ КАК МЕТОД, ЕЕ КОНТЕКСТ - WINDOW, А НАМ НУЖНО ОБЬЕКТ СОЗДАННЫЙ ДАННЫМ КОНСТРУКТОРОМ

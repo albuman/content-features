@@ -1,5 +1,5 @@
 var webpack = require('webpack');
-var path = require('path');
+
 module.exports = {
 	entry:  './app/js/main.js',
 	output: {
@@ -19,5 +19,5 @@ module.exports = {
 	},
 	resolve: {
 	},
-	devtool: 'eval',
+	devtool: 'source-map',
 }

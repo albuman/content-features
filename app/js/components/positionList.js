@@ -20,9 +20,11 @@ import React from 'react';
 					))}
 				</ol>
 				{found.length ? <div className="toCop">
-					<textarea>
-						{found.reduce((acum, position)=>(acum += position.exist ? `${position.partNumber} ${position.name} \n` : ''), '')}
-					</textarea>
+					<textarea value={
+						found.reduce((acum, position)=>(
+							acum += position.exist ? `${position.partNumber} ${position.name} \n` : '')
+						, '')
+					}/>
 					</div> : null}
 			</div>)
 		}

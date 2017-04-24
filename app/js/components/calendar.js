@@ -1,4 +1,4 @@
-
+import $ from 'jquery';
 	function createStructure(parent){
 		var container = document.createElement('div');
 		container.className = "container";
@@ -216,8 +216,7 @@
 		};
 
 		var c = new Calendar(months);
-		define(function(){
-			return c;
-		})
+
+		export {c as calendar};
 
 		
