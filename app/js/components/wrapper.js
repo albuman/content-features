@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import jQuery from 'jquery';
 import InputWrapper from './inputPlace';
 import Calendar from './calendar';
@@ -9,18 +8,10 @@ class Wrapper extends React.Component {
 	constructor(props){
 		super(props);
 		this.state  = {
-			action : 'check',
-			history : ''
-
+			action : 'check'
 		}
 	}
-	componentWillMount(){
-		console.log('Loading');
 
-	}
-	componentDidMount(){
-		console.log('Loaded')
-	}
 	handleChange(action){
 		switch (action) {
 			case 'check':
@@ -30,12 +21,10 @@ class Wrapper extends React.Component {
 				return;
 			case 'feeds':
 				this.setState({
-					action: 'feeds',
-					history : ''
+					action: 'feeds'
 				});
 				return;
 			default :
-				console.log('default');
 				return;
 
 		}
@@ -43,11 +32,11 @@ class Wrapper extends React.Component {
 	showCalendar(e){
 		e.stopPropagation();
 		$('body').css({"min-height" : "570px"});
-		$('.container').fadeIn()
+		$('.container').fadeIn();
 		
 	}
 	render() {
-		var {action, history} = this.state;
+		var {action} = this.state;
 		
 		return (<div className={this.props.className}>
 			<div className='trigger'>
@@ -60,7 +49,7 @@ class Wrapper extends React.Component {
 					<input type='radio' id='feeds' name='actionType' onChange={this.handleChange.bind(this, 'feeds')}/>
 				</label>
 			</div>
-			<InputWrapper action={action} history={history} />
+			<InputWrapper action={action}/>
 			<div className='history' onClick={this.showCalendar}>
 				<img src="/app/img/calendar.png"/>
 			</div>

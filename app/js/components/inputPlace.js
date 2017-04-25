@@ -18,36 +18,34 @@ class InputWrapper extends React.Component {
 			fetching : false // ОБОЗНАЧАЕТ СОСТОЯНИЕ ПОИСКА, ЕСЛИ TRUE - ЗНАЧИТ В ПРОЦЕССЕ ПОИСКА, БЛОКИРУЕТСЯ UI
 		}
 	}
-	componentWillReceiveProps(nextProp){
-		var {action, history} = nextProp;
-		switch (action) {
-			case 'check': // ПЕРЕКЛЮЧАЕТ СОСТОЯНИЕ НА ПОИСК ПОЗИЦИЙ
-				this.setState({
-					type : 'text',
-					found : [], // ОЧИЩАЕМ МАССИВ С СУЩЕСТВУЮЩИМИ ПОЗИЦИЯМИ
-					actionHandler : this.findPositions,
-					actionContainer : positionList,
-					inputValue : '' // ОЧИЩАЕМ ИНПУТ СО СТАРЫМ ЗНАЧЕНИЕМ
-				});
-				break
-			case 'feeds': // ПЕРЕКЛЮЧАЕТ СОСТОЯНИЕ НА ПОИСК ОТЗЫВОВ
-				this.setState({
-					type : 'number',
-					found : [], // ОЧИЩАЕМ МАССИВ С СУЩЕСТВУЮЩИМИ ПОЗИЦИЯМИ
-					actionHandler : this.findFeedbacks,
-					actionContainer : feedsList,
-					inputValue : '' // ОЧИЩАЕМ ИНПУТ СО СТАРЫМ ЗНАЧЕНИЕМ
-				});
-				break
-			default:
-				console.log(action)
-				break
-		};
-		if(history){
-			this.setState({inputValue : history}) // СТАВИМ В СОСТОЯНИЕ ПЕРЕДАННОЕ ЗНАЧЕНИЕ ИЗ КАЛЕНДАРЯ
-		}
-		
-   	
+
+	componentWillReceiveProps(nextProp) {
+        this.toggleState(nextProp);
+    }
+
+	toggleState(state){
+		var newState = {};
+		var {action} = state;
+        switch (action) {
+            case 'check': // ПЕРЕКЛЮЧАЕТ СОСТОЯНИЕ НА ПОИСК ПОЗИЦИЙ
+                newState.type = 'text';
+            	newState.actionHandler = this.findPositions;
+            	newState.actionContainer = positionList;
+            	break;
+
+            case 'feeds': // ПЕРЕКЛЮЧАЕТ СОСТОЯНИЕ НА ПОИСК ОТЗЫВОВ
+                newState.type = 'number';
+                newState.actionHandler = this.findFeedbacks();
+                newState.actionContainer = feedsList;
+                break;
+
+            default:
+            	break;
+        };
+        newState.found = [];// ОЧИЩАЕМ МАССИВ С СУЩЕСТВУЮЩИМИ ПОЗИЦИЯМИ
+        newState.inputValue = '';// ОЧИЩАЕМ ИНПУТ СО СТАРЫМ ЗНАЧЕНИЕМ
+        this.setState(newState);
+
 	}
 	inputHandler(e){
 		this.setState({inputValue: e.target.value}) // СТАВИМ В СОСТОЯНИЕ ЗНАЧЕНИЕ ИНПУТА ДЛЯ ПОИСКА
@@ -92,7 +90,7 @@ class InputWrapper extends React.Component {
 		function check(positions){ // А ДАЛЬШЕ МНЕ УЖЕ В ПАДЛУ РАСПИСЫВАТЬ... КОЛЯН УЖЕ НЕ ПЕРВЫЙ РАЗ ДОГАДЫВАЕТСЯ )))
 			var positionArr = positions.split(/\s/).filter(code=>(code.length > 2));
 			var now = new Date();
-			var date = now.getDate() + "-" + now.getMonth() + "-" + now.getFullYear();
+			var date = now.getFullYear() + "-" + now.getMonth() + "-" + now.getDate();
 			window.localStorage.setItem(date, positionArr.join(' '));
 			var promiseChain = Promise.resolve();
 			positionArr.forEach((pos , i)=>{
