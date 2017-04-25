@@ -5,6 +5,7 @@ function feeds(){
 		settings = {
 			query: 'http://mta.ua/index.php?route=product/product&path=2&product_id=',
 		};
+	
 	return $.get(file)
 		 .then(text=>{
 		 	var positionArr = text.split('\n');
@@ -12,22 +13,23 @@ function feeds(){
 			function findPosition (feedsValue) {
 				var id = Math.floor(Math.random() * positionArr.length),
 					url = settings.query + positionArr[id];
+				var getPositionObj = function(data){
+					var feedback = $(data).find('ul.nav-tabs>li:last').text(),
+						partNumber = $(data).find("u").text(),
+						avalible = !!$(data).find('.najavniste')[0],
+						name = $(data).find(".b1c-name").html(),
+						feedsQuantity = parseInt((feedback.slice(9)), 10),
+						url = settings.query + positionArr[id];
+					return {
+						partNumber,
+						avalible,
+						name,
+						feedsQuantity,
+						url
+					}
+				};
 				return $.get(url)
-					.then((data) => {
-						var feedback = $(data).find('ul.nav-tabs>li:last').text(),
-							partNumber = $(data).find("u").text(),
-							avalible = !!$(data).find('.najavniste')[0],
-							name = $(data).find(".b1c-name").html(),
-							feedsQuantity = parseInt((feedback.slice(9)), 10),
-							url = settings.query + positionArr[id];
-						return {
-							partNumber,
-							avalible,
-							name,
-							feedsQuantity,
-							url
-						}
-					}, (error) => (Error(`Проверьте существует ли позиция: ${positionArr[id]}. \n Ошибка: ${error}`)))
+					.then(getPositionObj, (error) => (Error(`Проверьте существует ли позиция: ${positionArr[id]}. \n Ошибка: ${error}`)))
 					.then(position => {
 						if (!feedsValue.toString() && position.avalible) {
 							return position

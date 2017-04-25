@@ -11,7 +11,13 @@
  "content_scripts": [
     {
       "matches": ["http://mta.ua/*"],
-      "js": ["app/js/lib/jquery.js", "app/js/lib/jquery-ui.js", "app/js/content/copyPaste.js", "app/js/content/slidePatch.js", "app/js/content/templatesModified.js"],
+      "js": [
+        "app/js/lib/jquery.js",
+        "app/js/lib/jquery-ui.js",
+        "app/js/content/copyPaste.js",
+        "app/js/content/slidePatch.js",
+        "app/js/content/templatesModified.js"
+      ],
 	  "css":["app/css/templates.css"],
 	  "run_at": "document_end"
     }

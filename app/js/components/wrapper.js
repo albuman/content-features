@@ -1,7 +1,10 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
+import jQuery from 'jquery';
 import InputWrapper from './inputPlace';
-import {calendar} from './calendar';
+import Calendar from './calendar';
 
+var $ = jQuery;
 class Wrapper extends React.Component {
 	constructor(props){
 		super(props);
@@ -37,14 +40,10 @@ class Wrapper extends React.Component {
 
 		}
 	}
-	showCalendar(){
-		var self = this;
-		return function(e){
-			e.stopPropagation();
-    		document.body.style.cssText = "min-height: 570px;"
-	  	var days = calendar.createCalendar(document.body)
-	  		(calendar.months, calendar.year, calendar.numberOfMonth, self.setState.bind(self));
-		}
+	showCalendar(e){
+		e.stopPropagation();
+		$('body').css({"min-height" : "570px"});
+		$('.container').fadeIn()
 		
 	}
 	render() {
@@ -62,8 +61,11 @@ class Wrapper extends React.Component {
 				</label>
 			</div>
 			<InputWrapper action={action} history={history} />
-			<div className='history' onClick={this.showCalendar()}>
+			<div className='history' onClick={this.showCalendar}>
 				<img src="/app/img/calendar.png"/>
+			</div>
+			<div className="calendar">
+				<Calendar/>
 			</div>
 		</div>)
 	}

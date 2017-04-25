@@ -6,6 +6,7 @@ module.exports = {
 		path: __dirname + '/../',
 		filename: 'bundle.js'
 	},
+	
 	module: {
 		loaders: [
 			{
@@ -18,6 +19,7 @@ module.exports = {
 		]
 	},
 	resolve: {
+		
 	},
 	devtool: 'source-map',
 }

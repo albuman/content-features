@@ -6,6 +6,7 @@
   "scripts": {
     "test": "npm test",
     "start": "node app/js/server/server.js",
+    "build": "webpack --config app/js/webpack/dev.config.js",
     "dev": "webpack --config app/js/webpack/dev.config.js & node app/js/server/server.js",
     "watch" : "webpack -w --config app/js/webpack/dev.config.js"
   },
