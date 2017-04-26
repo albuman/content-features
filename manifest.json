@@ -25,6 +25,6 @@
   "browser_action": {
     "default_title": "Content-manager features", // Заголовок, который отображается при наведении
     "default_icon": "app/img/search.png", // Иконка для отображения
-    "default_popup": "index.html" // страница (окно), которая будет отображаться при клике на иконку 
+    "default_popup": "app/views/index.html" // страница (окно), которая будет отображаться при клике на иконку
   }
 }

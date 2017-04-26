@@ -35,7 +35,7 @@ class InputWrapper extends React.Component {
 
             case 'feeds': // ПЕРЕКЛЮЧАЕТ СОСТОЯНИЕ НА ПОИСК ОТЗЫВОВ
                 newState.type = 'number';
-                newState.actionHandler = this.findFeedbacks();
+                newState.actionHandler = this.findFeedbacks;
                 newState.actionContainer = feedsList;
                 break;
 

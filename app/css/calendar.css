@@ -88,17 +88,17 @@
 		.nextMonth{
 			border-radius: 0 3px 3px 0;
 			right:-60px;
-			box-shadow: -2px 3px 6px #03a51b;
+			box-shadow: 0px 0px 15px #999;
 			
 		}
 		.prevMonth{
 			border-radius: 3px 0 0 3px;
 			left: -60px;
-			box-shadow: 2px 3px 6px #03a51b;
+			box-shadow: 0px 0px 15px #999;
 
 		}
 		.prevMonth:active, .nextMonth:active{
-			box-shadow:none;
+			box-shadow: 0px 0px;
 		}
 
 		.daysNames{
