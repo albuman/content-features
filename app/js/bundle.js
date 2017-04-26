@@ -19800,6 +19800,22 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function getAjaxSettings(data) {
+	return {
+		type: 'post',
+		url: '//localhost:4444',
+		data: data,
+		dataType: 'text'
+	};
+}
+var DOMSelectors = {
+
+	feedbackTab: 'ul.nav-tabs>li:last',
+	positionNumber: 'u',
+	avalibilityClass: '.najavniste',
+	positionNameClass: '.b1c-name'
+
+};
 function feeds() {
 	var file = "/data/all.txt",
 	    settings = {
@@ -19812,11 +19828,11 @@ function feeds() {
 		function findPosition(feedsValue) {
 			var id = Math.floor(Math.random() * positionArr.length),
 			    url = settings.query + positionArr[id];
-			var getPositionObj = function getPositionObj(data) {
-				var feedback = (0, _jquery2.default)(data).find('ul.nav-tabs>li:last').text(),
-				    partNumber = (0, _jquery2.default)(data).find("u").text(),
-				    avalible = !!(0, _jquery2.default)(data).find('.najavniste')[0],
-				    name = (0, _jquery2.default)(data).find(".b1c-name").html(),
+			function getPositionObj(data) {
+				var feedback = (0, _jquery2.default)(data).find(DOMSelectors.feedbackTab).text(),
+				    partNumber = (0, _jquery2.default)(data).find(DOMSelectors.positionNumber).text(),
+				    avalible = !!(0, _jquery2.default)(data).find(DOMSelectors.avalibilityClass)[0],
+				    name = (0, _jquery2.default)(data).find(DOMSelectors.positionNameClass).html(),
 				    feedsQuantity = parseInt(feedback.slice(9), 10),
 				    url = settings.query + positionArr[id];
 				return {
@@ -19827,7 +19843,7 @@ function feeds() {
 					url: url
 				};
 			};
-			return _jquery2.default.get(url).then(getPositionObj, function (error) {
+			return _jquery2.default.ajax(getAjaxSettings(url)).then(getPositionObj, function (error) {
 				return Error('\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442 \u043B\u0438 \u043F\u043E\u0437\u0438\u0446\u0438\u044F: ' + positionArr[id] + '. \n \u041E\u0448\u0438\u0431\u043A\u0430: ' + error);
 			}).then(function (position) {
 				if (!feedsValue.toString() && position.avalible) {
@@ -19951,9 +19967,16 @@ var settings = {
 	query: 'http://mta.ua/index.php?route=product/product&path=2&product_id=',
 	search: 'http://mta.ua/search?description=true&search='
 };
-
+function getAjaxSettings(data) {
+	return {
+		type: 'post',
+		url: '//localhost:4444',
+		data: data,
+		dataType: 'text'
+	};
+}
 function findPosition(code) {
-	return _jquery2.default.get(settings.search + code).then(function (dom) {
+	return _jquery2.default.ajax(getAjaxSettings(settings.search + code)).then(function (dom) {
 		var name, position;
 		name = (0, _jquery2.default)(dom).find('.b1c-name:first');
 		if (name.length > 0) {

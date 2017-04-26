@@ -1,11 +1,20 @@
 import $ from 'jquery';
+
 var settings = {
 	query : 'http://mta.ua/index.php?route=product/product&path=2&product_id=',
 	search: 'http://mta.ua/search?description=true&search='
 };
+function getAjaxSettings(data) {
+	return {
+		type: 'post',
+		url: '//localhost:4444',
+		data: data,
+		dataType: 'text'
+    }
 
+}
 function findPosition(code){
-	return $.get(settings.search + code)
+	return $.ajax(getAjaxSettings(settings.search + code))
 		  	.then((dom)=>{
 		  		var name ,
 		  			position;

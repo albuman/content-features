@@ -1,5 +1,22 @@
 import $ from 'jquery';
 
+function getAjaxSettings(data) {
+    return {
+        type: 'post',
+        url: '//localhost:4444',
+        data: data,
+        dataType: 'text'
+    }
+
+}
+const DOMSelectors = {
+
+	feedbackTab: 'ul.nav-tabs>li:last',
+	positionNumber: 'u',
+	avalibilityClass: '.najavniste',
+	positionNameClass: '.b1c-name',
+
+};
 function feeds(){
 	var file = "/data/all.txt",
 		settings = {
@@ -13,11 +30,11 @@ function feeds(){
 			function findPosition (feedsValue) {
 				var id = Math.floor(Math.random() * positionArr.length),
 					url = settings.query + positionArr[id];
-				var getPositionObj = function(data){
-					var feedback = $(data).find('ul.nav-tabs>li:last').text(),
-						partNumber = $(data).find("u").text(),
-						avalible = !!$(data).find('.najavniste')[0],
-						name = $(data).find(".b1c-name").html(),
+				function getPositionObj(data){
+					var feedback = $(data).find(DOMSelectors.feedbackTab).text(),
+						partNumber = $(data).find(DOMSelectors.positionNumber).text(),
+						avalible = !!$(data).find(DOMSelectors.avalibilityClass)[0],
+						name = $(data).find(DOMSelectors.positionNameClass).html(),
 						feedsQuantity = parseInt((feedback.slice(9)), 10),
 						url = settings.query + positionArr[id];
 					return {
@@ -28,7 +45,7 @@ function feeds(){
 						url
 					}
 				};
-				return $.get(url)
+				return $.ajax(getAjaxSettings(url))
 					.then(getPositionObj, (error) => (Error(`Проверьте существует ли позиция: ${positionArr[id]}. \n Ошибка: ${error}`)))
 					.then(position => {
 						if (!feedsValue.toString() && position.avalible) {

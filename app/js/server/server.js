@@ -7,6 +7,7 @@ var htmlContainer = require('./htmlContainer');
 
 const port = 4444;
 const host = 'localhost';
+const regExpUrl = /mta\.ua/;
 var methods = {
     'GET' : function(path, respond){
         fs.stat(path, function(error, stats){
@@ -36,9 +37,21 @@ var methods = {
 			}
 		})
     },
-	'POST': function(path, data){
+	'POST': function(req, respond){
+        var body = '';
+        req.on('data', function (data) {
+            body += data.toString();
+        });
+        req.on('end', function(){
+            if(regExpUrl.test(body)){
+                makeRequest(body, respond)
+            }
+        	
+        })
     	
-	}
+
+    }
+
 };
 
 function createReadable(dataToRead){
@@ -90,7 +103,7 @@ function urlToPath(url){
 function requestHandle(req, res){
     var url,
         requestedFile;
-    
+
     url = req.url;
 	
 	function respond(code, body, type) {
@@ -99,34 +112,41 @@ function requestHandle(req, res){
 		}
 		res.writeHead(code, {'Content-Type': type});
 		if (body && body.pipe) {
-			body.pipe(res);
+			body.on('data', function(chunk){
+				res.write(chunk)
+			});
+			body.on('end', function () {
+                res.end();
+            })
 		}
+
 	}
-	if(methods[req.method]){
-		if(url == '/'){
+
+	if(methods[req.method] && req.method == "GET"){
+		if(url == '/' && req.method == "GET"){
 			requestedFile = fs.createReadStream('app/views/index.html', 'utf8');
 			respond(200, requestedFile, 'text/html');
 		} else {
 			methods[req.method](urlToPath(url), respond);
 		}
 		
-	} else {
+	} else if(methods[req.method] && req.method == "POST"){
+        methods[req.method](req, respond)
+    } else {
 	    respond(405, htmlNoAccesTemplate(), 'text/html')
     }
 	
 
 }
 
-var path = 'http://mta.ua/index.php?route=product/product&path=2&product_id=64225';
-http.get(path, (res)=>{
-	http.get(res.headers.location, (response)=>{
-		response.on('data', function(chunk){
-			console.log(chunk.toString('utf-8'))
-		})
-	});
-	req.end()
-	
-});
+function makeRequest(path, callback) {
+    http.get(path, (res)=>{
+        http.get(res.headers.location || path, (response)=>{
+            callback(200, response, 'text/html')
+        });
+
+    });
+}
 
 function listenHandle(req, res){
     console.log("start listen on " + host + ':' + port);
