@@ -19,7 +19,7 @@ import React from 'react';
 						</li>
 					))}
 				</ol>
-				{found.length ? <div className="toCop">
+				{found.length ? <div className="checked__raw-text">
 					<textarea value={
 						found.reduce((acum, position)=>(
 							acum += position.exist ? `${position.partNumber} ${position.name} \n` : '')

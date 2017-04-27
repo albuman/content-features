@@ -2,32 +2,30 @@ import React from 'react';
 import jQuery from 'jquery';
 import InputWrapper from './inputPlace';
 import Calendar from './calendar';
+import Settings from './settings';
+import {actionTypes} from '../main';
 
 var $ = jQuery;
+
+
+
 class Wrapper extends React.Component {
 	constructor(props){
 		super(props);
 		this.state  = {
-			action : 'check'
+			action : actionTypes.findPosition //default action upon start application render
 		}
 	}
 
 	handleChange(action){
-		switch (action) {
-			case 'check':
-				this.setState({
-					action: 'check',
+		var self = this;
+		Object.keys(actionTypes).map(function(act_type){
+			if(actionTypes[act_type] == action){
+				self.setState({
+					action: action
 				});
-				return;
-			case 'feeds':
-				this.setState({
-					action: 'feeds'
-				});
-				return;
-			default :
-				return;
-
-		}
+			}
+		})
 	}
 	showCalendar(e){
 		e.stopPropagation();
@@ -37,27 +35,31 @@ class Wrapper extends React.Component {
 	}
 	render() {
 		var {action} = this.state;
-		
-		return (<div className={this.props.className}>
-			<div className='trigger'>
-				<label htmlFor='check' key="1" className={action == 'check' ? 'active' : ''}>
+		var {findPosition, findFeedbacks} = actionTypes;
+		return (<div className="content-tool">
+			<div className='content-tool__trigger'>
+				<label htmlFor={findPosition} key="1" className={action == findPosition ? 'content-tool__trigger--active' : ''}>
 					<span>Позиции</span>
-					<input type="radio" id="check" name="actionType" onChange={this.handleChange.bind(this, 'check')}/>
+					<input type="radio" id={findPosition} className="content-tool__trigger__input" name="actionType" onChange={this.handleChange.bind(this, findPosition)}/>
 				</label>
-				<label htmlFor='feeds' key="2" className={ action == 'feeds' ? 'active' : ''}>
+				<label htmlFor={findFeedbacks} key="2" className={action == findFeedbacks ? 'content-tool__trigger--active' : ''}>
 					<span>Отзывы</span>
-					<input type='radio' id='feeds' name='actionType' onChange={this.handleChange.bind(this, 'feeds')}/>
+					<input type='radio' id={findFeedbacks} className="content-tool__trigger__input" name='actionType' onChange={this.handleChange.bind(this, findFeedbacks)}/>
 				</label>
 			</div>
 			<InputWrapper action={action}/>
-			<div className='history' onClick={this.showCalendar}>
-				<img src="/app/img/calendar.png"/>
+			<div className='content-tool__history' onClick={this.showCalendar}>
+				
 			</div>
-			<div className="calendar">
+			<div className="content-tool__calendar">
 				<Calendar/>
 			</div>
+			<div className="content-tool__settings-icon">
+				
+			</div>
+			<Settings/>
 		</div>)
 	}
 }
-export default Wrapper;
+export {Wrapper, actionTypes};
 

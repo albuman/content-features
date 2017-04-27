@@ -3,11 +3,13 @@ var fs = require('fs');
 var mime = require('mime');
 var htmlContainer = require('./htmlContainer');
 
+//to add additional sites in file "/data/resolvedSites.json", type in array \"new-web-site\" separated by comma
+var resolvedSites = JSON.parse(require('../../../data/resolvedSites.json'));
 
 
 const port = 4444;
 const host = 'localhost';
-const regExpUrl = /mta\.ua/;
+
 var methods = {
     'GET' : function(path, respond){
         fs.stat(path, function(error, stats){
@@ -38,12 +40,14 @@ var methods = {
 		})
     },
 	'POST': function(req, respond){
-        var body = '';
+        var body,
+			autorizedSites = new RegExp(resolvedSites.join('|'));
+		body = '';
         req.on('data', function (data) {
             body += data.toString();
         });
         req.on('end', function(){
-            if(regExpUrl.test(body)){
+            if(autorizedSites.test(body)){
                 makeRequest(body, respond)
             }
         	

@@ -1,29 +1,28 @@
 import $ from 'jquery';
+import {address, DOMSelectors, isChromeExtension} from '../main';
 
-var settings = {
-	query : 'http://mta.ua/index.php?route=product/product&path=2&product_id=',
-	search: 'http://mta.ua/search?description=true&search='
-};
-function getAjaxSettings(data) {
-	return {
-		type: 'post',
-		url: '//localhost:4444',
-		data: data,
-		dataType: 'text'
-    }
 
-}
+
 function findPosition(code){
-	return $.ajax(getAjaxSettings(settings.search + code))
+	function getAjaxSettings(urlToSend) {
+		return {
+			type:isChromeExtension ? 'get' : 'post',
+			url: isChromeExtension ? urlToSend : address.local,
+			data: urlToSend,
+			dataType: 'text'
+		}
+		
+	}
+	return $.ajax(getAjaxSettings(address.targetSearch + code))
 		  	.then((dom)=>{
 		  		var name ,
 		  			position;
-				name = $(dom).find('.b1c-name:first');
+				name = $(dom).find(DOMSelectors.firstPositionName);
 		  		if(name.length > 0){
 		  			position = {
 				      	partNumber  : code,
 				       	name: name.text(),
-				      	url: settings.query + code,
+				      	url: name.attr('href'),
 				      	exist : true
 				    };
 			    	
