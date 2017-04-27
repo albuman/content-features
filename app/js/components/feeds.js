@@ -8,7 +8,7 @@ function feeds(){
 		return {
 			type: isChromeExtension ? 'get' : 'post',
 			url: isChromeExtension ? urlToSend : address.local,
-			data: urlToSend,
+			data: JSON.stringify({requestedSite: urlToSend,}),
 			dataType: 'text'
 		}
 		

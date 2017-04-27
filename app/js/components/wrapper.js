@@ -13,10 +13,9 @@ class Wrapper extends React.Component {
 	constructor(props){
 		super(props);
 		this.state  = {
-			action : actionTypes.findPosition //default action upon start application render
+			action : actionTypes.findPosition,//default action upon start application render
 		}
 	}
-
 	handleChange(action){
 		var self = this;
 		Object.keys(actionTypes).map(function(act_type){
@@ -33,6 +32,7 @@ class Wrapper extends React.Component {
 		$('.container').fadeIn();
 		
 	}
+
 	render() {
 		var {action} = this.state;
 		var {findPosition, findFeedbacks} = actionTypes;
@@ -48,18 +48,15 @@ class Wrapper extends React.Component {
 				</label>
 			</div>
 			<InputWrapper action={action}/>
-			<div className='content-tool__history' onClick={this.showCalendar}>
+			<div className='content-tool__history' onClick={this.showCalendar.bind(this)}>
 				
 			</div>
 			<div className="content-tool__calendar">
 				<Calendar/>
 			</div>
-			<div className="content-tool__settings-icon">
-				
-			</div>
 			<Settings/>
 		</div>)
 	}
 }
-export {Wrapper, actionTypes};
+export default Wrapper;
 

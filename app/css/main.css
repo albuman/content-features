@@ -170,10 +170,14 @@
 			margin: 5px; 
 
 		}
-		.content-tool__settings{
+		.content-tool__settings-sidebar{
 			position: absolute;
+			height: 100%;
+			min-width: 70%;
+			top:0;
 			right: 0;
-			transform: translateX(100%);
+			transition: .3s transform;
+			background: rgba(45,43,43, .8);
 		}
 		.content-tool__settings-icon{
 			position: absolute;
@@ -186,5 +190,18 @@
 			background-size: 70%;
 			cursor: pointer;
 			margin: 5px;
+		}
+		.content-tool__settings-default-path{
+			font-size: 1.2em;
+			line-height: 1.2;
+			padding-top: 10px;
+		}
+		.content-tool__settings-label {
+			padding-right: 10px;
+		}
+		.content-tool__settings-input {
+			line-height: 1.8;
+			border: none;
+			border-radius: 3px;
 		}
 		

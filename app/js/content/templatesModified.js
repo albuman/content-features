@@ -101,7 +101,7 @@ function template (descClass, caption, text, img, alt, title) {
 		name: 'input',
 		params: {
 			type: 'checkbox',
-			checked: img ? true : false,
+			checked: !!img,
 			data: 'image-switcher'
 		},
 		props: {

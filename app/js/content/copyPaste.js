@@ -186,7 +186,7 @@ $(document).ready(
 				btn.className = 'btn btn-theme-default';
 				btn.innerHTML = 'Открыть все позиции';
 				wrap.appendChild(btn);
-				wrap.style.cssText = 'clear: both; float: right;'
+				wrap.style.cssText = 'clear: both; float: right;';
 				btn.onclick = function(){
 					for(let i=0, n = document.getElementsByClassName('product-grid')[0].getElementsByClassName('b1c-name'); i<n.length; i++){
 						n[i].setAttribute('target', '__blank');
@@ -219,6 +219,21 @@ $(document).ready(
 
 var feedBlock = document.getElementById('tab-review');
 if(feedBlock){
+	$('.cod').on('click', function(){
+		var confirmation = confirm('Вы действительно хотите скопировать позицию в папку по умолчанию?');
+		if(confirmation){
+			var code,
+				parsedCode;
+
+			code = $(this).find('u').text();
+			parsedCode = code.slice(code.indexOf('-')+1);
+			$.ajax({
+				url: '//localhost:4444',
+				data: JSON.stringify({positionToCopy: parsedCode}),
+				type: 'post'
+			})
+		}
+	});
 	$("#colorbox-gal-load").css("height", "700px");
 	$(".slick-slide img").css('margin-top','0px');
 	var feeds = feedBlock.querySelector('.buttons.no-padding'),

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Wrapper} from './components/wrapper';
+import Wrapper from './components/wrapper';
 
 const isChromeExtension = /chrome-extension\:/.test(window.location.protocol);
 

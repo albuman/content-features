@@ -4,8 +4,7 @@ var mime = require('mime');
 var htmlContainer = require('./htmlContainer');
 
 //to add additional sites in file "/data/resolvedSites.json", type in array \"new-web-site\" separated by comma
-var resolvedSites = JSON.parse(require('../../../data/resolvedSites.json'));
-
+var resolvedSites = JSON.parse(require('./resolvedSites.json'));
 
 const port = 4444;
 const host = 'localhost';
@@ -47,9 +46,13 @@ var methods = {
             body += data.toString();
         });
         req.on('end', function(){
-            if(autorizedSites.test(body)){
-                makeRequest(body, respond)
-            }
+        	var parsedData = JSON.parse(body);
+
+            if(parsedData.requestedSite && autorizedSites.test(parsedData.requestedSite)){
+                makeRequest(parsedData.requestedSite, respond)
+            } else if(parsedData.positionToCopy){
+            	respond(200, createReadable('Copied'))
+			}
         	
         })
     	
@@ -114,7 +117,7 @@ function requestHandle(req, res){
 		if (!type) {
 			type = "text/plain";
 		}
-		res.writeHead(code, {'Content-Type': type});
+		res.writeHead(code, {'Content-Type': type, 'Access-Control-Allow-Origin': req.headers.origin});
 		if (body && body.pipe) {
 			body.on('data', function(chunk){
 				res.write(chunk)
