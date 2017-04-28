@@ -1,12 +1,10 @@
 import React from 'react';
 import {address} from '../const/constants';
 import jQuery from 'jquery';
+import _ from 'lodash';
 
 var $ = jQuery;
-var defaults= {
-	folder: "defaultFolder",
-	drive: "defaultDrive"
-};
+
 
 class Settings extends React.Component {
 	constructor (props){
@@ -22,20 +20,33 @@ class Settings extends React.Component {
 	}
 	componentDidMount(){
 		var self = this;
+
 		$.ajax(this._GET_defPahsAjaxSettings()).done(function (res) {
-			var data;
 			try{
-				data = JSON.parse(res);
-				
-				self.setState({path: new Object(data.path)});
-				self.setState({fetchedPath: new Object(data.path)});
+
+				self.setState({path: _.assignIn({}, res.path)});
+				self.setState({fetchedPath: _.assignIn({}, res.path)});
 				
 				
 			}catch(e){
-				console.error(e)
+				console.error(e);
 			}
 			
-		})
+		});
+        document.addEventListener('click', function(evt){
+            evt.stopPropagation();
+            if(!self._$settings.contains(evt.target) &&  evt.target !== self._$settings){
+
+                if(!self.isRelevantPaths()) {
+                    $.ajax(self._POST_defPahsAjaxSettings({path: self.state.path}))
+                        .done(function () {
+                            self.setState({fetchedPath: _.assignIn({}, self.state.path)});
+                        });
+                }
+                self.setState({visibleSettings: false});
+            }
+
+        });
 	}
 	
 	_getFetchedFolder(){
@@ -48,14 +59,16 @@ class Settings extends React.Component {
 	_GET_defPahsAjaxSettings(){
 		return {
 			type: 'get',
-			url: address.defaultPathsUrl
+			url: address.defaultPathsUrl,
+			dataType: 'json'
 		}
 	}
 	_POST_defPahsAjaxSettings(data){
 		return {
 			type: 'post',
-			url: address.defaultPathsUrl,
-			data: JSON.stringify(data)
+			url: address.local,
+			data: JSON.stringify(data),
+			contentType: 'application/json'
 		}
 	}
 	isRelevantPaths(){
@@ -73,31 +86,18 @@ class Settings extends React.Component {
 		existingDrive = existingPath.drive;
 		
 		if((savedDrive !== existingDrive) || (existingFolder !== savedFolder)){
-			return false
+			return false;
 		}
-		
+		return true;
 	}
 	
     toggleSettings(e){
         var {visibleSettings} = this.state;
-        var self;
-	
-		
-		self = this;
+
         if(visibleSettings){
         	this.setState({visibleSettings: false})
         } else {
-            document.addEventListener('click', function(evt){
-                
-            	if(!self._$settings.contains(evt.target) &&  evt.target !== self._$settings){
-					
-					if(!self.isRelevantPaths()){
-						self._POST_defPahsAjaxSettings(self.state.path);
-					}
-					self.setState({visibleSettings: false});
-				}
-					
-            }, true);
+
             this.setState({visibleSettings: true})
         }
     }
@@ -113,11 +113,11 @@ class Settings extends React.Component {
 	}
 	render(){
         var {visibleSettings, path} = this.state;
-		return (<div className="content-tool__settings">
+		return (<div className="content-tool__settings" ref={(settings=>{this._$settings = settings})}>
 		<div className="content-tool__settings-icon" onClick={this.toggleSettings.bind(this)}>
 
 		</div>
-			<div className="content-tool__settings-sidebar" ref={(settings=>{this._$settings = settings})}
+			<div className="content-tool__settings-sidebar"
 				 style={visibleSettings ? {transform: "translateX(0)"} : {transform: "translateX(100%)"}}>
 			<div className="content-tool__settings-row">
 				<label htmlFor="default-path" className="content-tool__settings-label">

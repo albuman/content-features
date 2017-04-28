@@ -35,12 +35,12 @@ class Calendar extends React.Component {
 
         weeks = this.buildCalendar(year, month);
         self = this;
-		weeks = weeks.map(function (week) {
-				return (<tr>
+		weeks = weeks.map(function (week, indx) {
+				return (<tr key={indx}>
 					{(function(){
 						var dayRow =[];
 						for(let i = 0; i < week.length; i++){
-							dayRow.push(<td><a style = {self.existLocalData(week[i]) ? {color: 'green'} : null}>{week[i]}</a></td>)
+							dayRow.push(<td key={`${indx}-${i}`}><a style = {self.existLocalData(week[i]) ? {color: 'green'} : null}>{week[i]}</a></td>)
 						}
 						return dayRow;
 					})()}

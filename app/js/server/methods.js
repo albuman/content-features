@@ -26,8 +26,16 @@ function handlePOST (obj, respond){
 		},
 		path: function(data, respond){
 			if(data.drive || data.folder){
-				
-				respond(200, createReadable(data.drive + ' ' + data.folder))
+
+				fs.writeFile('data/defaultPaths.json', JSON.stringify({path: data}), function (err) {
+					if(err){
+                        respond(500, htmlTemplates.noAccess(), 'text/html');
+					}
+					else {
+						respond(200, createReadable('defaultPaths.json updated with: ' + JSON.stringify({path: data})))
+					}
+                })
+
 			} else {
 				respond(405, htmlTemplates.noAccess(), 'text/html')
 			}
@@ -55,7 +63,7 @@ module.exports = {
 	'GET' : function(path, respond){
 		fs.stat(path, function(error, stats){
 			if(error && error.code == "ENOENT"){
-				respond(404, htmlNotFoundTemplate(), 'text/html')
+				respond(404, htmlTemplates.notFound(), 'text/html')
 			} else if(error){
 				respond(500, error.toString())
 			} else if(stats.isDirectory()){

@@ -38,15 +38,15 @@ function requestHandle(req, res){
 
 	}
 
-	if(methods[req.method] && req.method == "GET"){
-		if(url == '/' && req.method == "GET"){
+	if(methods[req.method] && (req.method).toLowerCase() == "get"){
+		if(url == '/'){
 			requestedFile = fs.createReadStream('app/views/index.html', 'utf8');
 			respond(200, requestedFile, 'text/html');
 		} else {
 			methods[req.method](urlToPath(url), respond);
 		}
 		
-	} else if(methods[req.method] && req.method == "POST"){
+	} else if(methods[req.method] && (req.method).toLowerCase() == "post"){
         methods[req.method](req, respond)
     } else {
 	    respond(405, htmlTemplates.noAccess(), 'text/html')

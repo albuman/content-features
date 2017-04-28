@@ -47,8 +47,9 @@ Temporary Items
 .apdisk
 
 #Data folder with position codes
-data/*
+data/*.txt
 node_modules
 .idea
 npm-debug.log
 *.map
+bundle.js
