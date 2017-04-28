@@ -4,7 +4,7 @@ import feeds from './feeds';
 import findPosition from './findPosition';
 import feedsList from './feedsList';
 import positionList from './positionList';
-import {actionTypes, feedsQuantity} from '../main';
+import {actionTypes, feedsQuantity, address} from '../const/constants';
 
 class InputWrapper extends React.Component {
 	constructor(props){
@@ -82,7 +82,7 @@ class InputWrapper extends React.Component {
 		this.setState({found : [], fetching : true}); // ЧИСТИМ СТАРЫЕ ПОЗИЦИИ / ПЕРЕКЛЮЧАЕМ В ПРОЦЕСС ПОИСКА ПОЗИЦИЙ И БЛОКИРУЕМ UI
 		var positions = inputValue;
 		if(positions.length < 1){ // ЕСЛИ ВВЕДЕНО МЕНЬШЕ 1-ГО ЗНАКА (НИЕГО НЕ ВВЕДЕНО) - ЗАПУСКАЕМ ПОИСК С ПОЗИЦИЯМИ В ФАЙЛЕ data/dir.txt
-			$.get('/data/dir.txt')
+			$.get(address.lastChekout)
 			.done(text=>{
 				this.setState({inputValue : text.replace(/\s/g, ' ')}); // СТАВИМ В ИНПУТ ЗНАЧЕНИЕ ФАЙЛА ЗАМЕНЯЕМ ЛИШНИЕ ПРОБЕЛЫ НА ОДИН ПРОБЕЛ ИСПОЛЬЗУЯ РЕГ. ВЫРАЖЕНИЯ
 				return check.call(this, text)

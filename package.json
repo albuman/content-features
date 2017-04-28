@@ -34,6 +34,7 @@
     "plain-text-data-to-json": "^1.0.0",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
+    "underscore": "^1.8.3",
     "webpack": "^2.4.1"
   }
 }

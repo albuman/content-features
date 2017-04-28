@@ -1,20 +1,18 @@
 import $ from 'jquery';
-import {address, DOMSelectors, isChromeExtension} from '../main';
+import {address, DOMSelectors, isChromeExtension} from '../const/constants';
 
 function feeds(){
-	var file = "/data/all.txt";
 	
 	function getAjaxSettings(urlToSend) {
 		return {
 			type: isChromeExtension ? 'get' : 'post',
 			url: isChromeExtension ? urlToSend : address.local,
-			data: JSON.stringify({requestedSite: urlToSend,}),
+			data: JSON.stringify({requestedSite: urlToSend}),
 			dataType: 'text'
 		}
 		
 	}
-	
-	return $.get(file)
+	return $.get(address.allPositionList)
 		 .then(text=>{
 		 	var positionArr = text.split('\n');
 

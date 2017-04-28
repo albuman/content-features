@@ -1,14 +1,14 @@
 import $ from 'jquery';
-import {address, DOMSelectors, isChromeExtension} from '../main';
+import {address, DOMSelectors, isChromeExtension} from '../const/constants';
 
 
 
 function findPosition(code){
 	function getAjaxSettings(urlToSend) {
 		return {
-			type:isChromeExtension ? 'get' : 'post',
+			type: isChromeExtension ? 'get' : 'post',
 			url: isChromeExtension ? urlToSend : address.local,
-			data: urlToSend,
+			data: JSON.stringify({requestedSite: urlToSend}),
 			dataType: 'text'
 		}
 		

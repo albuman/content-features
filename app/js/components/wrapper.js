@@ -3,7 +3,7 @@ import jQuery from 'jquery';
 import InputWrapper from './inputPlace';
 import Calendar from './calendar';
 import Settings from './settings';
-import {actionTypes} from '../main';
+import {actionTypes} from '../const/constants';
 
 var $ = jQuery;
 
