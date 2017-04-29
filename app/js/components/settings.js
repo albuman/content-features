@@ -1,10 +1,4 @@
-import React from 'react';
 import {address} from '../const/constants';
-import jQuery from 'jquery';
-import _ from 'lodash';
-
-var $ = jQuery;
-
 
 class Settings extends React.Component {
 	constructor (props){
@@ -24,8 +18,8 @@ class Settings extends React.Component {
 		$.ajax(this._GET_defPahsAjaxSettings()).done(function (res) {
 			try{
 
-				self.setState({path: _.assignIn({}, res.path)});
-				self.setState({fetchedPath: _.assignIn({}, res.path)});
+				self.setState({path: _.assignIn({}, res)});
+				self.setState({fetchedPath: _.assignIn({}, res)});
 				
 				
 			}catch(e){
@@ -38,10 +32,10 @@ class Settings extends React.Component {
             if(!self._$settings.contains(evt.target) &&  evt.target !== self._$settings){
 
                 if(!self.isRelevantPaths()) {
-                    $.ajax(self._POST_defPahsAjaxSettings({path: self.state.path}))
+                    $.ajax(self._POST_defPahsAjaxSettings(self.state.path))
                         .done(function () {
-                            self.setState({fetchedPath: _.assignIn({}, self.state.path)});
-                        });
+                            self.setState({fetchedPath: _.assignIn({}, self.state.path)})
+                        })
                 }
                 self.setState({visibleSettings: false});
             }
@@ -67,7 +61,7 @@ class Settings extends React.Component {
 		return {
 			type: 'post',
 			url: address.local,
-			data: JSON.stringify(data),
+			data: JSON.stringify({path: data}),
 			contentType: 'application/json'
 		}
 	}

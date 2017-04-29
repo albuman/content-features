@@ -1,9 +1,10 @@
 var webpack = require('webpack');
+var outputPath = __dirname + '/../';
 
 module.exports = {
 	entry:  './app/js/main.js',
 	output: {
-		path: __dirname + '/../',
+		path: outputPath,
 		filename: 'bundle.js'
 	},
 	
@@ -14,12 +15,23 @@ module.exports = {
 				loader: 'babel-loader',
 				options: {
 					presets: ['react', "es2015"]
-				}
+				},
+				exclude: [/node_modules/]
 			}
-		]
+		],
 	},
-	resolve: {
-		
-	},
+	plugins: [
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false
+            }
+        }),
+        new webpack.ProvidePlugin({
+            $ : "jquery",
+			_ : "lodash",
+			React: "react"
+        })
+	],
+
 	devtool: 'source-map',
-}
+};

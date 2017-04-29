@@ -38,7 +38,7 @@ function requestHandle(req, res){
 
 	}
 
-	if(methods[req.method] && (req.method).toLowerCase() == "get"){
+	if(methods[req.method] && ((req.method).toLowerCase() == "get")){
 		if(url == '/'){
 			requestedFile = fs.createReadStream('app/views/index.html', 'utf8');
 			respond(200, requestedFile, 'text/html');

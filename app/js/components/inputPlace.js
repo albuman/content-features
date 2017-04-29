@@ -1,5 +1,3 @@
-import React from 'react';
-import $ from 'jquery';
 import feeds from './feeds';
 import findPosition from './findPosition';
 import feedsList from './feedsList';
@@ -18,6 +16,14 @@ class InputWrapper extends React.Component {
 			inputValue : '', // ЗНАЧЕНИЕ ДЛЯ ПОИСКА, (КОДЫ ПОЗИЦИЙ/ПАРТНАМБЕРЫ/КОЛИЧЕСТВО ОТЗЫВОВ)
 			fetching : false // ОБОЗНАЧАЕТ СОСТОЯНИЕ ПОИСКА, ЕСЛИ TRUE - ЗНАЧИТ В ПРОЦЕССЕ ПОИСКА, БЛОКИРУЕТСЯ UI
 		}
+	}
+	componentDidMount(){
+        var self = this;
+		$(document).on('daySelect', function(e, position){
+        	self.setState({inputValue: position});
+        	$(this).trigger('hide_calendar');
+        	console.log($(this))
+		})
 	}
 
 	componentWillReceiveProps(nextProp) {
@@ -94,7 +100,7 @@ class InputWrapper extends React.Component {
 			var positionArr = positions.split(/\s/).filter(code=>(code.length > 2));
 			var now = new Date();
 			var date = now.getFullYear() + "-" + now.getMonth() + "-" + now.getDate();
-			window.localStorage.setItem(date, positionArr.join(' '));
+			$.ajax(this._POST_positionsAjaxSettings({[date]: positionArr}));
 			var promiseChain = Promise.resolve();
 			positionArr.forEach((pos , i)=>{
 				promiseChain = promiseChain
@@ -114,6 +120,14 @@ class InputWrapper extends React.Component {
 		}
    	
 	}
+    _POST_positionsAjaxSettings(data){
+        return {
+            type: 'post',
+            url: address.local,
+            data: JSON.stringify({updateHistory: data}),
+            contentType: 'application/json'
+        }
+    }
 	enterPress(){ // НАЖАТИЕ НА ЕНТЕР ИМЕЕТ ТОТ ЖЕ ЭФФЕКТ ЧТО И КЛИК НА КНОПКУ "НАЙТИ"
 		var self = this;
 		return function(e){

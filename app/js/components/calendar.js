@@ -1,7 +1,5 @@
-import jQuery from 'jquery';
-import React from 'react';
+import {address} from '../const/constants';
 
-var $ = jQuery;
 var monthsArr = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
 
 class Calendar extends React.Component {
@@ -12,13 +10,31 @@ class Calendar extends React.Component {
 			currentMonth: now.getMonth(),
 			currentDate: now.getDate(),
 			currentYear: now.getFullYear(),
+			allHistory: {}
 		};
 		
 	}
 	componentDidMount(){
 		var {currentMonth, currentYear} = this.state;
-		this.renderWeeks(currentYear, currentMonth);
+		var self = this;
+		$.ajax(this._GET_historyAjaxSettings())
+			.done(function(historyObj){
+				self.setState({allHistory: historyObj})
+			})
+			.then(function(){
+                self.renderWeeks(currentYear, currentMonth);
+                self.setHistoryHandler();
+			});
+		this.setVisibleHandlers();
+
 	}
+    _GET_historyAjaxSettings(){
+        return {
+            type: 'get',
+            url: address.history,
+            dataType: 'json'
+        }
+    }
 	daysInMonth (_, nthMonth) {
         ++nthMonth;
 		return (28 + (nthMonth + Math.floor(nthMonth/8)) % 2 + 2 % nthMonth + 2 * Math.floor(1/nthMonth));
@@ -49,6 +65,33 @@ class Calendar extends React.Component {
 		this.setState({weeks});
 
 	}
+	setHistoryHandler(){
+		var self = this;
+		$('.daysNames tbody td').on('click', function(){
+			var $td,
+				date,
+				positions;
+
+			var {currentMonth, currentYear, allHistory} = self.state;
+
+			$td = $(this);
+			date = currentYear + '-' + currentMonth + '-' + $td.text();
+			positions = allHistory[date];
+			if(positions)
+				$(document).trigger('daySelect', positions.join(' '))
+
+		});
+	}
+	setVisibleHandlers(){
+		var self = this;
+		$(document).on('hide_calendar', function(e){
+			$(self.container).fadeOut();
+		});
+        $(document).on('show_calendar', function(e){
+            $('body').css({"min-height" : "570px"});
+            $(self.container).fadeIn();
+        });
+	}
 	buildCalendar(year, monthIndex){
 
 		let months,
@@ -73,9 +116,9 @@ class Calendar extends React.Component {
 		return weeksInMonth;
 	}
 	existLocalData(date){
-		var {currentMonth, currentYear} = this.state;
+		var {currentMonth, currentYear, allHistory} = this.state;
 		date = currentYear + '-' + currentMonth + '-' + date;
-		if(window.localStorage[date]){
+		if(allHistory[date]){
 			return true
 		}
 	}
@@ -110,7 +153,7 @@ class Calendar extends React.Component {
 	hideCalendar(e){
 		e.stopPropagation();
 		if(e.currentTarget == e.target){
-			$(e.currentTarget).fadeOut();
+			$(document).trigger('hide_calendar');
 		}
 
 	}
@@ -125,7 +168,7 @@ class Calendar extends React.Component {
 		daysArr = ["Понедельник", "Вторник", "Среда", "Черверг", "Пятница", "Суббота", "Воскресенье"];
 
 
-		return (<div className="container" style={{display: "none"}} onClick={this.hideCalendar.bind(this)}>
+		return (<div className="container" ref={(calendarContainer=>{this.container = calendarContainer})} style={{display: "none"}} onClick={this.hideCalendar.bind(this)}>
 			<div className="calendWrap">
 				<div className="todayWrap">
 					<span className="todayDateBlock">

@@ -3,12 +3,13 @@ const isChromeExtension = /chrome-extension\:/.test(window.location.protocol);
 const feedsQuantity = 10;
 
 const address = {
-	local: '//localhost:4444',
+	local: 'http://localhost:4444',
 	targetQuery: 'http://mta.ua/index.php?route=product/product&path=2&product_id=',
 	targetSearch: 'http://mta.ua/search?description=true&search=',
 	lastChekout: '/data/dir.txt',
 	allPositionList: '/data/all.txt',
-	defaultPathsUrl: '/data/defaultPaths.json'
+	defaultPathsUrl: '/data/defaultPaths.json',
+    history: '/data/historyLog.json',
 };
 
 const actionTypes = {

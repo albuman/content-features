@@ -1,11 +1,7 @@
-import React from 'react';
-import jQuery from 'jquery';
 import InputWrapper from './inputPlace';
 import Calendar from './calendar';
 import Settings from './settings';
 import {actionTypes} from '../const/constants';
-
-var $ = jQuery;
 
 
 
@@ -26,11 +22,8 @@ class Wrapper extends React.Component {
 			}
 		})
 	}
-	showCalendar(e){
-		e.stopPropagation();
-		$('body').css({"min-height" : "570px"});
-		$('.container').fadeIn();
-		
+	showCalendar(){
+		$(document).trigger('show_calendar');
 	}
 
 	render() {

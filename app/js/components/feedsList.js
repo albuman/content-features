@@ -1,12 +1,18 @@
-import React from 'react';
+import {isChromeExtension} from '../const/constants';
 
 class PositionList extends React.Component {
 	constructor(props){
 		super(props)
 	}
-	open(url){
-		chrome.tabs.create({'url': url, active:false})
-	}
+    open(url){
+        if(isChromeExtension){
+            chrome.tabs.create({'url': url, active:false});
+        }
+        else{
+            window.open(url);
+        }
+
+    }
 	render(){
 		var {found} = this.props;
 		
@@ -15,7 +21,7 @@ class PositionList extends React.Component {
 				<ol className="feeds">
 					{found.map((position, i)=>(
 						<li key={i}>
-							<a href={position.url} onClick={()=>{this.open(position.url)}}>{position.name}</a>
+							<a href={position.url} onClick={(e)=>{e.preventDefault(); this.open(position.url)}}>{position.name}</a>
 							<p>{`Отзывов: ${position.feedsQuantity}`}</p>
 						</li>
 					))}

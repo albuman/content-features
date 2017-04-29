@@ -2,6 +2,7 @@ var fs = require('fs');
 var http = require('http');
 var mime = require('mime');
 var htmlTemplates = require('./HTMLtemplates');
+var _ = require('lodash');
 
 //to add additional sites in file "/data/resolvedSites.json", type in array \"new-web-site\" separated by comma
 var resolvedSites = JSON.parse(require('./resolvedSites.json'));
@@ -21,18 +22,15 @@ function handlePOST (obj, respond){
 		positionToCopy: function (data, respond) {
 			//respond(200, createReadable('Copied'))
 		},
-		getHistoryFile: function (data, respond) {
-			
-		},
 		path: function(data, respond){
 			if(data.drive || data.folder){
 
-				fs.writeFile('data/defaultPaths.json', JSON.stringify({path: data}), function (err) {
+				fs.writeFile('data/defaultPaths.json', JSON.stringify(data, null, '\t'), function (err) {
 					if(err){
                         respond(500, htmlTemplates.noAccess(), 'text/html');
 					}
 					else {
-						respond(200, createReadable('defaultPaths.json updated with: ' + JSON.stringify({path: data})))
+						respond(200, createReadable('defaultPaths.json updated with: ' + JSON.stringify(data)))
 					}
                 })
 
@@ -42,8 +40,41 @@ function handlePOST (obj, respond){
 			
 		},
 		updateHistory: function (data, respond) {
-			
-		}
+			var historyFilePath = 'data/historyLog.json';
+			fs.stat(historyFilePath, function(err, stats){
+                if(err && (err.code == "ENOENT")){
+                    fs.writeFile(historyFilePath, JSON.stringify(data, null, '\t'), function(error){
+                        if(error){
+                            respond(405, htmlTemplates.noAccess(), 'text/html');
+                        } else {
+                            respond(200, createReadable('Created'));
+                        }
+                    });
+
+                } else if (err) {
+                    respond(405, htmlTemplates.noAccess(), 'text/html');
+                } else if(stats.isFile()){
+
+                    var historyFile = require('../../../'+historyFilePath);
+                    var updatedData = _.assignIn({}, historyFile, data);
+                    fs.writeFile(historyFilePath, JSON.stringify(updatedData, null, '\t'), function(error){
+                    	if(error){
+                            respond(405, htmlTemplates.noAccess(), 'text/html');
+						} else {
+                            respond(200, createReadable('Updated'));
+						}
+					})
+                }
+				else {
+                    respond(404, htmlTemplates.notFound(), 'text/html');
+				}
+
+			})
+		},
+		getCalendarItem: function(data, respond){
+
+		},
+
 	};
 	sendedKeys = Object.keys(obj);
 	if(sendedKeys.length){
@@ -62,7 +93,8 @@ function handlePOST (obj, respond){
 module.exports = {
 	'GET' : function(path, respond){
 		fs.stat(path, function(error, stats){
-			if(error && error.code == "ENOENT"){
+
+			if(error && (error.code == "ENOENT")){
 				respond(404, htmlTemplates.notFound(), 'text/html')
 			} else if(error){
 				respond(500, error.toString())
@@ -78,7 +110,6 @@ module.exports = {
 						links = links.concat(files.map(function(file){return '<a href=' + path.replace('.', '') + '/' + file + '>' + file + '</a><br>'})).join('');
 						
 						htmlTemplate = htmlTemplates.container(links);
-						
 						respond(200, createReadable(htmlTemplate), 'text/html');
 					}
 					
@@ -111,16 +142,19 @@ module.exports = {
 	
 };
 
-function createReadable(dataToRead){
+function createReadable(){
 	var toPipe,
-		readable;
-	
+		readable,
+		dataToRead;
+
+    dataToRead = [].slice.call(arguments);
+
 	readable = require('stream').Readable;
 	toPipe = new readable();
-	
-	toPipe.push(dataToRead);
-	toPipe.push(null);
-	
+
+    toPipe.push.apply(toPipe, dataToRead); // need to use .push method of RS, because no content will to read
+    toPipe.push(null); // because , if no RS.push(null), then cache is null, so RS call ._read() to read. if RS.push(null) , mean is done.
+
 	return toPipe;
 }
 
