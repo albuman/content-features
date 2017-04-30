@@ -107,6 +107,7 @@ class Settings extends React.Component {
 	}
 	render(){
         var {visibleSettings, path} = this.state;
+
 		return (<div className="content-tool__settings" ref={(settings=>{this._$settings = settings})}>
 		<div className="content-tool__settings-icon" onClick={this.toggleSettings.bind(this)}>
 
@@ -126,6 +127,13 @@ class Settings extends React.Component {
 				</label>
 				<input id="default-position-drive" className="content-tool__settings-input" ref={defdrive=>{this.defaultDrive = defdrive}}
 					   value={path.drive} onInput={this.saveDefaultPositionDrive.bind(this)}/>
+			</div>
+			<div className="content-tool__settings-row">
+				<div className="content-tool__settings-show-history">
+					<button className="content-tool__settings-history-button">
+                        {"Показать историю"}
+					</button>
+				</div>
 			</div>
 			</div>
 		</div>)

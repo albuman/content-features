@@ -22,7 +22,6 @@ class InputWrapper extends React.Component {
 		$(document).on('daySelect', function(e, position){
         	self.setState({inputValue: position});
         	$(this).trigger('hide_calendar');
-        	console.log($(this))
 		})
 	}
 

@@ -2,6 +2,10 @@ const isChromeExtension = /chrome-extension\:/.test(window.location.protocol);
 
 const feedsQuantity = 10;
 
+const monthsArr = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+const daysAbbr = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+const daysArr = ["Понедельник", "Вторник", "Среда", "Черверг", "Пятница", "Суббота", "Воскресенье"];
+
 const address = {
 	local: 'http://localhost:4444',
 	targetQuery: 'http://mta.ua/index.php?route=product/product&path=2&product_id=',
@@ -28,4 +32,13 @@ const DOMSelectors = {
 	
 };
 
-export {address, actionTypes, DOMSelectors, isChromeExtension, feedsQuantity};
+export {
+    address,
+    actionTypes,
+    DOMSelectors,
+    isChromeExtension,
+    feedsQuantity,
+    monthsArr,
+    daysAbbr,
+    daysArr
+};

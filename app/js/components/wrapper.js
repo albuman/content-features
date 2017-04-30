@@ -44,9 +44,7 @@ class Wrapper extends React.Component {
 			<div className='content-tool__history' onClick={this.showCalendar.bind(this)}>
 				
 			</div>
-			<div className="content-tool__calendar">
-				<Calendar/>
-			</div>
+			<Calendar/>
 			<Settings/>
 		</div>)
 	}

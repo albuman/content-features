@@ -1,6 +1,6 @@
-import {address} from '../const/constants';
+import {address, monthsArr, daysAbbr, daysArr} from '../const/constants';
 
-var monthsArr = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+
 
 class Calendar extends React.Component {
 	constructor(props){
@@ -24,8 +24,9 @@ class Calendar extends React.Component {
 			.then(function(){
                 self.renderWeeks(currentYear, currentMonth);
                 self.setHistoryHandler();
+                self.setVisibleHandlers();
 			});
-		this.setVisibleHandlers();
+
 
 	}
     _GET_historyAjaxSettings(){
@@ -53,12 +54,16 @@ class Calendar extends React.Component {
         self = this;
 		weeks = weeks.map(function (week, indx) {
 				return (<tr key={indx}>
-					{(function(){
+					{(function(){ // no use .map() because .map not going through array undefined elements
 						var dayRow =[];
 						for(let i = 0; i < week.length; i++){
-							dayRow.push(<td key={`${indx}-${i}`}><a style = {self.existLocalData(week[i]) ? {color: 'green'} : null}>{week[i]}</a></td>)
+							dayRow.push(<td key={`${indx}-${i}`}>
+								<a style = {self.existLocalData(week[i]) ? {color: 'green'} : null}>
+									{week[i]}
+								</a>
+							</td>)
 						}
-						return dayRow;
+						return dayRow
 					})()}
 				</tr>)
 			});
@@ -67,18 +72,20 @@ class Calendar extends React.Component {
 	}
 	setHistoryHandler(){
 		var self = this;
-		$('.daysNames tbody td').on('click', function(){
+		$('.daysNames tbody').on('click', 'td', function(e){
 			var $td,
 				date,
 				positions;
 
 			var {currentMonth, currentYear, allHistory} = self.state;
 
-			$td = $(this);
+			$td = $(e.currentTarget);
 			date = currentYear + '-' + currentMonth + '-' + $td.text();
 			positions = allHistory[date];
-			if(positions)
-				$(document).trigger('daySelect', positions.join(' '))
+
+			if(positions){
+                $(document).trigger('daySelect', positions.join(' '));
+			}
 
 		});
 	}
@@ -144,7 +151,6 @@ class Calendar extends React.Component {
 			++currentYear;
 		}
 		this.setState({currentYear, currentMonth}, ()=>{
-			console.log(this.state.currentMonth, this.state.currentYear);
             this.renderWeeks(currentYear, currentMonth);
         });
 
@@ -158,57 +164,53 @@ class Calendar extends React.Component {
 
 	}
 	render(){
-		var now,
-			daysArr,
-			daysAbbr;
+		var now = new Date();
 
 
-		now = new Date();
-		daysAbbr = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
-		daysArr = ["Понедельник", "Вторник", "Среда", "Черверг", "Пятница", "Суббота", "Воскресенье"];
 
+		return (<div className="content-tool__calendar">
 
-		return (<div className="container" ref={(calendarContainer=>{this.container = calendarContainer})} style={{display: "none"}} onClick={this.hideCalendar.bind(this)}>
-			<div className="calendWrap">
-				<div className="todayWrap">
-					<span className="todayDateBlock">
-						{now.getDate()}
-					</span>
-					<span className="todayBlock">
-						{daysArr[this.dayPos(now.getFullYear(), now.getMonth(), now.getDate())-1].toUpperCase()}
-					</span>
-				</div>
-				<div className="monthContainer">
-					<div className="monthWrap">
-					<span className="prevMonth" onClick={this.prevMonth.bind(this)}>
-						{"<"}
-					</span>
-					<span className="monthLine">
-						{monthsArr[this.state.currentMonth]}
-					</span>
-						<span className="nextMonth" onClick={this.nextMonth.bind(this)}>
-						{">"}
-					</span>
+			<div className="container" ref={(calendarContainer=>{this.container = calendarContainer})} style={{display: "none"}} onClick={this.hideCalendar.bind(this)}>
+				<div className="calendWrap">
+					<div className="todayWrap">
+						<span className="todayDateBlock">
+							{now.getDate()}
+						</span>
+						<span className="todayBlock">
+							{daysArr[this.dayPos(now.getFullYear(), now.getMonth(), now.getDate())-1].toUpperCase()}
+						</span>
 					</div>
-					<div className="daysWrap">
-						<div className="days">
-							<table className="daysNames">
-								<thead>
-								<tr>
-									{daysAbbr.map(function(day, i){
-										return <td key={i}>{day}</td>
-									})}
-								</tr>
-								</thead>
-								<tbody>
-									{this.state.weeks}
-								</tbody>
-							</table>
+					<div className="monthContainer">
+						<div className="monthWrap">
+						<span className="prevMonth" onClick={this.prevMonth.bind(this)}>
+							{"<"}
+						</span>
+						<span className="monthLine">
+							{monthsArr[this.state.currentMonth]}
+						</span>
+							<span className="nextMonth" onClick={this.nextMonth.bind(this)}>
+							{">"}
+						</span>
+						</div>
+						<div className="daysWrap">
+							<div className="days">
+								<table className="daysNames">
+									<thead>
+									<tr>
+										{daysAbbr.map(function(day, i){
+											return <td key={i}>{day}</td>
+										})}
+									</tr>
+									</thead>
+									<tbody>
+										{this.state.weeks}
+									</tbody>
+								</table>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-
 		</div>)
 	}
 }

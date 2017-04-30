@@ -177,7 +177,7 @@
 			top:0;
 			right: 0;
 			transition: .3s transform;
-			background: rgba(45,43,43, .8);
+			background: rgba(45,43,43, .9);
 		}
 		.content-tool__settings-icon{
 			position: absolute;
@@ -194,9 +194,8 @@
 		.content-tool__settings-row{
 			font-size: 1.2em;
 			line-height: 1.2;
-			padding-top: 10px;
+			padding: 10px;
 			text-align: right;
-			padding-right: 10px;
 		}
 		.content-tool__settings-label {
 			padding-right: 10px;
@@ -205,5 +204,18 @@
 			line-height: 1.8;
 			border: none;
 			border-radius: 3px;
+			background-color: rgba(3, 165, 27, .3);
+			color: #888888;
 		}
-		
+		.content-tool__settings-history-button{
+			width: 100%;
+			line-height: 1.2;
+			background-color: #03a51b;
+			color: black;
+			font-size: 1em;
+			border: none;
+			border-radius: 3px;
+			padding: 10px;
+			outline: none;
+			cursor: pointer;
+		}
