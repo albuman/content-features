@@ -173,41 +173,58 @@ function productBlockEffects(productBlock, specs, codePath, controls, link, inde
 
 $(document).ready(
 	()=>{
-			if(document.getElementsByClassName('products-block')[0]){
-				setParamsToElems(document.getElementsByClassName('col-lg-4 col-md-4 col-sm-4 col-xs-12 product-cols'));
-				document.getElementsByClassName('products-block')[0].style.overflow = 'visible';		
-				var block = document.getElementById('mfilter-content-container'), 
-				search = document.getElementsByClassName('product-filter clearfix')[0],
-				navigList = document.getElementsByClassName('search')[0],
-				wrap = document.createElement('div'),
-				btn  = document.createElement('a');
+		if(document.getElementsByClassName('products-block')[0]){
+			setParamsToElems(document.getElementsByClassName('col-lg-4 col-md-4 col-sm-4 col-xs-12 product-cols'));
+			document.getElementsByClassName('products-block')[0].style.overflow = 'visible';
+			var block = document.getElementById('mfilter-content-container'),
+			search = document.getElementsByClassName('product-filter clearfix')[0],
+			navigList = document.getElementsByClassName('search')[0],
+			wrap = document.createElement('div'),
+			btn  = document.createElement('a');
 
-				wrap.className = 'product-compare';
-				btn.className = 'btn btn-theme-default';
-				btn.innerHTML = 'Открыть все позиции';
-				wrap.appendChild(btn);
-				wrap.style.cssText = 'clear: both; float: right;';
-				btn.onclick = function(){
-					for(let i=0, n = document.getElementsByClassName('product-grid')[0].getElementsByClassName('b1c-name'); i<n.length; i++){
-						n[i].setAttribute('target', '__blank');
-						window.open(n[i]);
-				}
-				};
-				var nav = document.getElementsByClassName('pagination paging clearfix')[0],
-					productBlock = document.getElementsByClassName('product-grid')[0],
-					copyNav = nav.cloneNode(true);
-				if(navigList){
-					search.appendChild(wrap);
-					navigList.insertBefore(copyNav, productBlock);
-				}
-				else{
-					search.appendChild(wrap);
-					block.insertBefore(copyNav, productBlock);
-				};
-
+			wrap.className = 'product-compare';
+			btn.className = 'btn btn-theme-default';
+			btn.innerHTML = 'Открыть все позиции';
+			wrap.appendChild(btn);
+			wrap.style.cssText = 'clear: both; float: right;';
+			btn.onclick = function(){
+				for(let i=0, n = document.getElementsByClassName('product-grid')[0].getElementsByClassName('b1c-name'); i<n.length; i++){
+					n[i].setAttribute('target', '__blank');
+					window.open(n[i]);
 			}
+			};
+			var nav = document.getElementsByClassName('pagination paging clearfix')[0],
+				productBlock = document.getElementsByClassName('product-grid')[0],
+				copyNav = nav.cloneNode(true);
+			if(navigList){
+				search.appendChild(wrap);
+				navigList.insertBefore(copyNav, productBlock);
+			}
+			else{
+				search.appendChild(wrap);
+				block.insertBefore(copyNav, productBlock);
+			}
+
+		};
+        $('.cod').css('cursor','pointer').on('click', function(){
+            var confirmation = confirm('Вы действительно хотите скопировать позицию в папку по умолчанию?');
+            if(confirmation){
+                var code,
+                    parsedCode;
+
+                code = $(this).find('u').text();
+                parsedCode = code.slice(code.indexOf('-')+1);
+                var req = $.ajax({
+                    url: 'http://localhost:4444',
+                    data: JSON.stringify({positionToCopy: parsedCode}),
+                    type: 'post'
+                }).always(function(res){
+                    alert(res.responseText || res);
+                })
+            }
+        });
 	}
-)
+);
 
 
 
@@ -219,23 +236,12 @@ $(document).ready(
 
 var feedBlock = document.getElementById('tab-review');
 if(feedBlock){
-	$('.cod').on('click', function(){
-		var confirmation = confirm('Вы действительно хотите скопировать позицию в папку по умолчанию?');
-		if(confirmation){
-			var code,
-				parsedCode;
 
-			code = $(this).find('u').text();
-			parsedCode = code.slice(code.indexOf('-')+1);
-			$.ajax({
-				url: '//localhost:4444',
-				data: JSON.stringify({positionToCopy: parsedCode}),
-				type: 'post'
-			})
-		}
-	});
+
 	$("#colorbox-gal-load").css("height", "700px");
 	$(".slick-slide img").css('margin-top','0px');
+
+
 	var feeds = feedBlock.querySelector('.buttons.no-padding'),
 		womenNames = 'Александра Саша Сашка Алёна Алина Алла Анастасия Настя Ангелина Анна Аня Анька Богдана Валентина Валя Валерия Лера Вера Виктория Вика Виолетта Влада Галина Галя Дарья Даша Евгения Екатерина Катя Катюха Елена Лена Елизавета Лиза Зоя Инна Ира Карина Кира Кристина Ксения Ксюха Лариса Лидия Лида Лика Любовь Люба Людмила Люда Марина Мария Маша Надежда Надя Наталья Наташа Нина Оксана Олеся Ольга Оля Полина Светлана Света Соня Стелла Тая Татьяна Таня Ульяна Юлия Юля Яна Ярослава';
 		manNames = 'Александр Саша Алексей Лёша Анатолий Толик Андрей Антон Аркадий Арсений Сеня Артём Тёма Богдан Бодя Борис Боря Вадим Валентин Валик Валерий Валера Василий Вася Виктор Витя Виталий Виталик Владимир Вова Владислав Влад Вячеслав Славик Геннадий Гена Георгий Жора Григорий Гриша Денис Дмитрий Дима Евгений Женя Егор Иван Ваня Игорь Илья Кирилл Константин Костя Леонид Лёня Максим Никита Николай Коля Олег Павел Паша Пётр Петя Роман Рома Ростислав Ростик Руслан Семён Сергей Серёга Станислав Стас Степан Стёпа Тарас Фёдор Федя Филипп Юрий Юра Ярослав';

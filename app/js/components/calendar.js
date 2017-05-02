@@ -10,32 +10,20 @@ class Calendar extends React.Component {
 			currentMonth: now.getMonth(),
 			currentDate: now.getDate(),
 			currentYear: now.getFullYear(),
-			allHistory: {}
 		};
 		
 	}
 	componentDidMount(){
-		var {currentMonth, currentYear} = this.state;
 		var self = this;
-		$.ajax(this._GET_historyAjaxSettings())
-			.done(function(historyObj){
-				self.setState({allHistory: historyObj})
-			})
-			.then(function(){
-                self.renderWeeks(currentYear, currentMonth);
-                self.setHistoryHandler();
-                self.setVisibleHandlers();
-			});
+		var {currentMonth, currentYear} = this.state;
 
-
+        $(document).on('history_loaded', function(){
+            self.renderWeeks(currentYear, currentMonth);
+            self.setHistoryHandler();
+            self.setVisibleHandlers();
+		});
 	}
-    _GET_historyAjaxSettings(){
-        return {
-            type: 'get',
-            url: address.history,
-            dataType: 'json'
-        }
-    }
+
 	daysInMonth (_, nthMonth) {
         ++nthMonth;
 		return (28 + (nthMonth + Math.floor(nthMonth/8)) % 2 + 2 % nthMonth + 2 * Math.floor(1/nthMonth));
@@ -77,7 +65,8 @@ class Calendar extends React.Component {
 				date,
 				positions;
 
-			var {currentMonth, currentYear, allHistory} = self.state;
+			var {currentMonth, currentYear} = self.state;
+			var {allHistory} = self.props;
 
 			$td = $(e.currentTarget);
 			date = currentYear + '-' + currentMonth + '-' + $td.text();
@@ -95,7 +84,7 @@ class Calendar extends React.Component {
 			$(self.container).fadeOut();
 		});
         $(document).on('show_calendar', function(e){
-            $('body').css({"min-height" : "570px"});
+            $('body').css({"min-height" : "600px"});
             $(self.container).fadeIn();
         });
 	}
@@ -123,7 +112,9 @@ class Calendar extends React.Component {
 		return weeksInMonth;
 	}
 	existLocalData(date){
-		var {currentMonth, currentYear, allHistory} = this.state;
+		var {currentMonth, currentYear} = this.state;
+		var {allHistory} = this.props;
+
 		date = currentYear + '-' + currentMonth + '-' + date;
 		if(allHistory[date]){
 			return true
@@ -157,7 +148,7 @@ class Calendar extends React.Component {
 
 	};
 	hideCalendar(e){
-		e.stopPropagation();
+		//e.stopPropagation();
 		if(e.currentTarget == e.target){
 			$(document).trigger('hide_calendar');
 		}
@@ -173,6 +164,9 @@ class Calendar extends React.Component {
 			<div className="container" ref={(calendarContainer=>{this.container = calendarContainer})} style={{display: "none"}} onClick={this.hideCalendar.bind(this)}>
 				<div className="calendWrap">
 					<div className="todayWrap">
+						<span className="yearBlock">
+							{this.state.currentYear}
+						</span>
 						<span className="todayDateBlock">
 							{now.getDate()}
 						</span>

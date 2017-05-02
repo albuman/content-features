@@ -47,6 +47,11 @@
 		.todayWrap:after{
 			right:20%;
 		}
+		.yearBlock{
+			font-size: 2em;
+			font-weight: 600;
+			display: block;
+		}
 		.todayWrap .todayDateBlock{
 			font-size: 9em;
 			display: block;

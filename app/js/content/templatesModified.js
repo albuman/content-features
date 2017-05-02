@@ -39,8 +39,64 @@ const preferences = {
 };
 const descriptionTypes = Object.keys(preferences.descriptionTypes);
 var generalQuantChess = 0;
+const fileName = {
+	name: 'div',
+	params: {
+		class: 'file-name col-lg-8 col-md-8'
+	},
+	childs: [
+		{
+			name: 'label',
+			params: {
+				for: 'file-name',
+                style: 'width: 50%'
+			},
+			props: {
+				textContent: 'Имя файла: '
+			}
+		},
+
+		{
+            name: 'input',
+            params: {
+                id: 'file-name',
+				style: 'width: 50%'
+            },
+            props: {
+                oninput: function(){
+                    autoComplete.call(this, '.path input[type=text]:not([disabled])');
+                }
+            }
+		},
+        {
+            name: 'label',
+            params: {
+                for: 'folder-name',
+                style: 'width: 50%'
+            },
+            props: {
+                textContent: 'Имя папки: '
+            }
+        },
+
+        {
+            name: 'input',
+            params: {
+                id: 'folder-name',
+                style: 'width: 50%'
+            },
+            props: {
+                oninput: function(){
+                    autoComplete.call(this, '.path input[type=number]:not([disabled]');
+                }
+            }
+        }
+	]
+
+};
 function template (descClass, caption, text, img, alt, title) {
 	const generateID = Math.random();
+
 	const close = {
 		name: 'i',
 		params: {
@@ -176,9 +232,7 @@ function template (descClass, caption, text, img, alt, title) {
 					data: 'image-name'
 				},
 				props: {
-					oninput: function(){
-						autoComplete.call(this, '.path input[type=text]');
-					}
+
 				}
 			},
 			{
@@ -583,7 +637,7 @@ const controls = {
 										props: {
 											textContent: 'Генерировать',
 											onclick: function(){
-												var mask = document.querySelector('#colorbox-gal-loadopactiv');
+												//var mask = document.querySelector('#colorbox-gal-loadopactiv');
 												
 												var child = {
 													name: 'div',
@@ -613,11 +667,17 @@ const controls = {
 													var elem = recursiveCreatingElems(description);
 													output += htmlFormat(elem.elem.outerHTML);
 												});
-												var textArea = append(child, mask);
-												textArea.elem.childs[0].value = output;
-												mask.style.display = 'block';
-												function remove(){mask.removeChild(textArea.elem); mask.removeEventListener('click', remove)};
-												mask.addEventListener('click', remove);
+												$.ajax({
+													url: 'http://localhost:4444',
+													type: 'post',
+													data: JSON.stringify({createDescription:{
+														fileName: $('input#file-name').val() + '.html',
+                                                        folderName: $('input#folder-name').val(),
+														text: output
+													}})
+												}).always(function(res){
+													alert(res.responseText || res);
+												});
 											}
 										}
 									}
@@ -747,6 +807,7 @@ const description =  {
 			style: 'display: none; overflow: auto; position: relative; min-height: 200px',
 		},
 		childs: [
+			fileName,
 			container,
 			controls
 		]
@@ -1537,9 +1598,9 @@ if(tabs){
 	// START TO SET ORDER TO BLOCKS
 	nthOfBlock('p.path i.nth', 'p.path input[type=checkbox]');
 	// END TO SET ORDER TO BLOCKS
-	console.log(stylingChess(contain));
 	[].forEach.call(tabs.querySelectorAll('a'), (a)=>{
 		a.onclick = function(e){
+			e.preventDefault();
 			var selector = tabs.querySelectorAll('a.selected');
 			$(selector).removeClass('selected');
 			$(e.target).addClass('selected');
@@ -1552,7 +1613,7 @@ if(tabs){
 			if(button === e.target)	{
 				[].forEach.call(contain.childs, desc=>{
 					dragNdrop(desc, contain);
-				})
+				});
 				window.onscroll = function(e){
 
 					const height = parseFloat(getComputedStyle(controlP).height);

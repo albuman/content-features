@@ -1,8 +1,8 @@
 import InputWrapper from './inputPlace';
 import Calendar from './calendar';
 import Settings from './settings';
-import {actionTypes} from '../const/constants';
-
+import {actionTypes, address} from '../const/constants';
+import HistoryLog from './historyLog';
 
 
 class Wrapper extends React.Component {
@@ -10,8 +10,25 @@ class Wrapper extends React.Component {
 		super(props);
 		this.state  = {
 			action : actionTypes.findPosition,//default action upon start application render
+            allHistory: {}
 		}
 	}
+
+	componentDidMount(){
+        var self = this;
+        $.ajax(this._GET_historyAjaxSettings())
+            .done(function(historyObj){
+                self.setState({allHistory: historyObj});
+				$(document).trigger('history_loaded');
+            });
+	}
+    _GET_historyAjaxSettings(){
+        return {
+            type: 'get',
+            url: address.history,
+            dataType: 'json'
+        }
+    }
 	handleChange(action){
 		var self = this;
 		Object.keys(actionTypes).map(function(act_type){
@@ -27,7 +44,7 @@ class Wrapper extends React.Component {
 	}
 
 	render() {
-		var {action} = this.state;
+		var {action, allHistory} = this.state;
 		var {findPosition, findFeedbacks} = actionTypes;
 		return (<div className="content-tool">
 			<div className='content-tool__trigger'>
@@ -44,8 +61,9 @@ class Wrapper extends React.Component {
 			<div className='content-tool__history' onClick={this.showCalendar.bind(this)}>
 				
 			</div>
-			<Calendar/>
+			<Calendar allHistory={allHistory}/>
 			<Settings/>
+			<HistoryLog log={allHistory}/>
 		</div>)
 	}
 }

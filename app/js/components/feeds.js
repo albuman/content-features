@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import {address, DOMSelectors, isChromeExtension} from '../const/constants';
 
 function feeds(){

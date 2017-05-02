@@ -2,7 +2,7 @@ import feeds from './feeds';
 import findPosition from './findPosition';
 import feedsList from './feedsList';
 import positionList from './positionList';
-import {actionTypes, feedsQuantity, address} from '../const/constants';
+import {actionTypes, feedsQuantity, address, isChromeExtension} from '../const/constants';
 
 class InputWrapper extends React.Component {
 	constructor(props){
@@ -136,8 +136,12 @@ class InputWrapper extends React.Component {
 		}
 	}
 	openTabs(){
+		var openFunc = function(url){
+            isChromeExtension ? chrome.tabs.create({'url': url, active:false}) : window.open(url, '_blank');
+        };
+
 		this.state.found.forEach(position=>{
-			chrome.tabs.create({'url': position.url, active:false})
+			openFunc(position.url)
 		})
 	}
 	render(){

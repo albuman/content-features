@@ -7,6 +7,59 @@ var _ = require('lodash');
 //to add additional sites in file "/data/resolvedSites.json", type in array \"new-web-site\" separated by comma
 var resolvedSites = JSON.parse(require('./resolvedSites.json'));
 
+const historyFilePath = 'data/historyLog.json';
+const defaultPathFileName = 'data/defaultPaths.json';
+
+function getPathFile(respond, callback) {
+    var stats,
+		defaultPath;
+
+
+	try{
+        defaultPath = require('../../../'+defaultPathFileName);
+        if(defaultPath.folder && defaultPath.drive) {
+            stats = fs.statSync(defaultPath.folder);
+            if(stats.isDirectory()){
+                if (callback) {
+                    return callback(defaultPath);
+                } else {
+                	return defaultPath;
+				}
+			}
+
+        }
+    } catch (e) {
+		respond(500, createReadable(e.message));
+		console.error(e.message);
+	}
+
+
+}
+function getHistoryFile(respond, callback){
+	var stats,
+		historyFile;
+
+
+	try{
+		stats = fs.statSync(historyFilePath);
+		if(stats.isFile()){
+            historyFile = require('../../../' + historyFilePath);
+		}
+	} catch(e){
+		if(e.code === 'ENOENT' || (e instanceof SyntaxError)){
+            fs.writeFileSync(historyFilePath, JSON.stringify({}));
+            historyFile = require('../../../' + historyFilePath);
+		} else {
+			respond(500, createReadable(e.message))
+		}
+	}
+	if(callback){
+		return callback(historyFile)
+	} else {
+        return historyFile;
+	}
+
+}
 function handlePOST (obj, respond){
 	
 	var handlers,
@@ -20,17 +73,33 @@ function handlePOST (obj, respond){
 			}
 		},
 		positionToCopy: function (data, respond) {
-			//respond(200, createReadable('Copied'))
+            var defaultPath;
+
+            if(!isNaN(Number(data))){
+				defaultPath = getPathFile(respond);
+                try{
+                    recursiveCopyFolder(defaultPath.drive + '/' + data, defaultPath.folder+ '/' + data, respond);
+                    respond(200, createReadable('Папка ' + data + ' успешно скопирована в ' + defaultPath.folder));
+				} catch (err){
+                    if(err && (err.code == 'ENOENT')){
+                        respond(500, createReadable('Папка ' + data + ' не найдена в директории ' + defaultPath.drive));
+                    } else {
+                        respond(500, createReadable(err.message));
+                    }
+                }
+
+
+			}
 		},
 		path: function(data, respond){
 			if(data.drive || data.folder){
 
-				fs.writeFile('data/defaultPaths.json', JSON.stringify(data, null, '\t'), function (err) {
+				fs.writeFile(defaultPathFileName, JSON.stringify(data, null, '\t'), function (err) {
 					if(err){
                         respond(500, htmlTemplates.noAccess(), 'text/html');
 					}
 					else {
-						respond(200, createReadable('defaultPaths.json updated with: ' + JSON.stringify(data)))
+						respond(200, createReadable(defaultPathFileName + ' updated with: ' + JSON.stringify(data)))
 					}
                 })
 
@@ -40,39 +109,66 @@ function handlePOST (obj, respond){
 			
 		},
 		updateHistory: function (data, respond) {
-			var historyFilePath = 'data/historyLog.json';
-			fs.stat(historyFilePath, function(err, stats){
-                if(err && (err.code == "ENOENT")){
-                    fs.writeFile(historyFilePath, JSON.stringify(data, null, '\t'), function(error){
-                        if(error){
-                            respond(405, htmlTemplates.noAccess(), 'text/html');
-                        } else {
-                            respond(200, createReadable('Created'));
-                        }
-                    });
+			var historyFile = getHistoryFile(respond);
 
-                } else if (err) {
+            updatedData = _.assignIn({}, historyFile, data);
+
+            fs.writeFile(historyFilePath, JSON.stringify(updatedData, null, '\t'), function(error){
+            	if(error){
                     respond(405, htmlTemplates.noAccess(), 'text/html');
-                } else if(stats.isFile()){
-
-                    var historyFile = require('../../../'+historyFilePath);
-                    var updatedData = _.assignIn({}, historyFile, data);
-                    fs.writeFile(historyFilePath, JSON.stringify(updatedData, null, '\t'), function(error){
-                    	if(error){
-                            respond(405, htmlTemplates.noAccess(), 'text/html');
-						} else {
-                            respond(200, createReadable('Updated'));
-						}
-					})
-                }
-				else {
-                    respond(404, htmlTemplates.notFound(), 'text/html');
+				} else {
+                    respond(200, createReadable('Updated'));
 				}
-
 			})
-		},
-		getCalendarItem: function(data, respond){
 
+		},
+        createDescription: function(data, respond){
+			if(data.fileName && data.folderName){
+				var defaultPath = getPathFile(respond);
+				var main = defaultPath.folder + '/' + data.folderName;
+				var mainFolderContent = [main, main+'/description', main+'/photos'];
+
+				function needCallback(folder){
+					return folder == mainFolderContent[1]
+				}
+				function writeFile(path){
+                    fs.writeFile(path + '/' + data.fileName, data.text || '', function (err) {
+                        if(err){
+                            respond(500, createReadable(err.message));
+                        } else {
+                            respond(200, createReadable('Файл записан'))
+                        }
+                    })
+				}
+				function createFolders(path){
+                    fs.stat(path, function(err, stats){
+                        if(err && err.code == 'ENOENT'){
+                            fs.mkdir(path, function(err){
+                                if(err){
+                                    respond(500, createReadable(err.message));
+                                }
+                                if(needCallback(path)){
+                                    writeFile(path)
+                                }
+							})
+
+						} else if(err){
+                            respond(500, createReadable(err.message));
+						} else {
+                        	if(stats.isDirectory()){
+                                if(needCallback(path)){
+                                    writeFile(path)
+                                }
+                            }
+                        }
+					})
+				}
+				mainFolderContent.forEach(function(path){
+					createFolders(path);
+				})
+			} else {
+                respond(500, createReadable('Не указано имя файла или имя папки!'))
+			}
 		},
 
 	};
@@ -107,7 +203,9 @@ module.exports = {
 							htmlTemplate;
 						
 						links = [].concat('<a href=' + getUpPath(path) + '> ... </a><br>');
-						links = links.concat(files.map(function(file){return '<a href=' + path.replace('.', '') + '/' + file + '>' + file + '</a><br>'})).join('');
+						links = links.concat(files.map(function(file){
+							return '<a href=' + path.replace('.', '') + '/' + file + '>' + file + '</a><br>'
+						})).join('');
 						
 						htmlTemplate = htmlTemplates.container(links);
 						respond(200, createReadable(htmlTemplate), 'text/html');
@@ -138,10 +236,51 @@ module.exports = {
 		})
 		
 		
+	},
+	'OPTIONS': function(res){
+        var headers = {
+            "Access-Control-Allow-Origin" : "*",
+            "Access-Control-Allow-Methods" : "POST, GET, OPTIONS",
+            "Access-Control-Allow-Credentials" : false,
+            "Access-Control-Allow-Headers": "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept"
+		};
+
+        res.writeHead(200, headers);
+        res.end();
 	}
 	
 };
+function recursiveCopyFolder(drivePath, workFolderPath,  respond){
+    var files,
+		stats;
 
+    stats = fs.statSync(drivePath);
+    if(stats.isDirectory()){
+
+        fs.mkdirSync(workFolderPath);
+        files = fs.readdirSync(drivePath);
+        files.forEach(function(file){
+            recursiveCopyFolder(drivePath+'/'+file, workFolderPath+'/'+file, respond)
+        });
+
+
+    } else if(stats.isFile()){
+        var encoding,
+            readable,
+            writable,
+            isTextFormat;
+
+        isTextFormat = /(.txt|.html|.htm|.doc|.docx)/.test(drivePath);
+        encoding = isTextFormat ? 'utf-8' : 'binary';
+
+        readable = fs.createReadStream(drivePath, encoding);
+        writable = fs.createWriteStream(workFolderPath, encoding);
+
+        readable.pipe(writable);
+    }
+
+
+}
 function createReadable(){
 	var toPipe,
 		readable,
@@ -151,6 +290,7 @@ function createReadable(){
 
 	readable = require('stream').Readable;
 	toPipe = new readable();
+	toPipe.encoding = 'utf-8';
 
     toPipe.push.apply(toPipe, dataToRead); // need to use .push method of RS, because no content will to read
     toPipe.push(null); // because , if no RS.push(null), then cache is null, so RS call ._read() to read. if RS.push(null) , mean is done.

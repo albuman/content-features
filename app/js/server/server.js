@@ -33,12 +33,15 @@ function requestHandle(req, res){
 			});
 			body.on('end', function () {
                 res.end();
+                Object.keys(require.cache).forEach(function(key) { delete require.cache[key] });
             })
 		}
+
 
 	}
 
 	if(methods[req.method] && ((req.method).toLowerCase() == "get")){
+
 		if(url == '/'){
 			requestedFile = fs.createReadStream('app/views/index.html', 'utf8');
 			respond(200, requestedFile, 'text/html');
@@ -47,10 +50,18 @@ function requestHandle(req, res){
 		}
 		
 	} else if(methods[req.method] && (req.method).toLowerCase() == "post"){
-        methods[req.method](req, respond)
-    } else {
-	    respond(405, htmlTemplates.noAccess(), 'text/html')
-    }
+
+		methods[req.method](req, respond)
+
+	} else if(methods[req.method] && (req.method).toLowerCase() == "options"){
+
+		methods[req.method](res)
+
+	} else {
+
+	       respond(405, htmlTemplates.noAccess(), 'text/html')
+
+	}
 	
 
 }

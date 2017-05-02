@@ -1,5 +1,6 @@
 import {address} from '../const/constants';
 
+
 class Settings extends React.Component {
 	constructor (props){
 		super(props);
@@ -28,7 +29,7 @@ class Settings extends React.Component {
 			
 		});
         document.addEventListener('click', function(evt){
-            evt.stopPropagation();
+            //evt.stopPropagation();
             if(!self._$settings.contains(evt.target) &&  evt.target !== self._$settings){
 
                 if(!self.isRelevantPaths()) {
@@ -41,6 +42,7 @@ class Settings extends React.Component {
             }
 
         });
+        $(this._$logButton).on('click', this.showLog.bind(this)); // because React uses event delegation with a single event listener on document for events that bubble, like 'click' in this example, which means stopping propagation is not possible;
 	}
 	
 	_getFetchedFolder(){
@@ -95,6 +97,11 @@ class Settings extends React.Component {
             this.setState({visibleSettings: true})
         }
     }
+    showLog(e){
+    	e.stopPropagation();
+        $(document).trigger('show_log');
+        this.toggleSettings();
+	}
 	saveDefaultFolder(){
     	var {path} = this.state;
     	path.folder = this.defaultFolder.value;
@@ -130,7 +137,7 @@ class Settings extends React.Component {
 			</div>
 			<div className="content-tool__settings-row">
 				<div className="content-tool__settings-show-history">
-					<button className="content-tool__settings-history-button">
+					<button className="content-tool__settings-history-button" ref={logButton=>{this._$logButton = logButton}}>
                         {"Показать историю"}
 					</button>
 				</div>
