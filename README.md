@@ -1,6 +1,6 @@
 # content-features
 content app
- - git clone https://github.com/albuman/content-features.git
+ - git clone https://github.com/albuman/content-features.git -b fs_integration
  - git pull
  
 var a = window.localStorage;
