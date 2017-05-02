@@ -2,7 +2,7 @@
 content app
  - git clone https://github.com/albuman/content-features.git -b fs_integration
  - npm install
- - npm build
+ - npm run build
  - git pull
  
 var a = window.localStorage;
