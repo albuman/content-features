@@ -140,32 +140,33 @@ function handlePOST (obj, respond){
                         }
                     })
 				}
-				function createFolders(path){
-                    fs.stat(path, function(err, stats){
-                        if(err && err.code == 'ENOENT'){
-                            fs.mkdir(path, function(err){
-                                if(err){
-                                    respond(500, createReadable(err.message));
-                                }
-                                if(needCallback(path)){
-                                    writeFile(path)
-                                }
-							})
-
-						} else if(err){
-                            respond(500, createReadable(err.message));
+				function createFolders(path) {
+					var stats;
+					try {
+						console.log(path);
+						stats = fs.statSync(path);
+						if (stats.isDirectory() && needCallback(path)) {
+							writeFile(path)
+						}
+					} catch (err) {
+						if (err && err.code == 'ENOENT') {
+							fs.mkdirSync(path);
+							console.log(err)
+							if (needCallback(path)) {
+								writeFile(path)
+							}
+							
 						} else {
-                        	if(stats.isDirectory()){
-                                if(needCallback(path)){
-                                    writeFile(path)
-                                }
-                            }
-                        }
-					})
+							respond(500, createReadable(err.message));
+							
+						}
+						
+					}
 				}
-				mainFolderContent.forEach(function(path){
+				mainFolderContent.forEach(function (path) {
 					createFolders(path);
 				})
+				
 			} else {
                 respond(500, createReadable('Не указано имя файла или имя папки!'))
 			}
