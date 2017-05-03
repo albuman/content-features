@@ -48,6 +48,7 @@ Temporary Items
 
 #Data folder with position codes
 data/*.txt
+data/*.json
 node_modules
 .idea
 npm-debug.log
