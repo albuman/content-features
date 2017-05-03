@@ -11,7 +11,7 @@ const address = {
 	targetQuery: 'http://mta.ua/index.php?route=product/product&path=2&product_id=',
 	targetSearch: 'http://mta.ua/search?description=true&search=',
 	lastChekout: '/data/dir.txt',
-	allPositionList: '/data/all.txt',
+	allPositionList: '/data/allPosition.json',
 	defaultPathsUrl: '/data/defaultPaths.json',
     history: '/data/historyLog.json',
 };

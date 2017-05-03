@@ -66,9 +66,37 @@ function requestHandle(req, res){
 
 }
 
-
+function updatePositionFile(){
+	var defaultPthFile;
+	try {
+		defaultPthFile = require('../../../data/defaultPaths.json');
+		
+	} catch(e){
+		console.log(e)
+	}
+	if(defaultPthFile){
+		fs.readdir(defaultPthFile.drive, function(err, files){
+			if(err){
+				console.log(err)
+			} else {
+				fs.writeFile('./data/allPosition.json', JSON.stringify(files, null, '\t'), function(err){
+					if(err){
+						console.log(err)
+					} else {
+						console.log('allPosition.json updated!');
+						setTimeout(updatePositionFile, 14400000); // 14400000ms === 4hours
+					}
+				})
+			}
+			
+		})
+	}
+}
 function listenHandle(req, res){
     console.log("start listen on " + host + ':' + port);
+	updatePositionFile()
+	
+	
 }
 
 http.createServer(requestHandle).listen(port, host, listenHandle);
