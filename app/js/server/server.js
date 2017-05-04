@@ -67,7 +67,8 @@ function requestHandle(req, res){
 }
 
 function updatePositionFile(){
-	var defaultPthFile;
+	var defaultPthFile,
+        filteredFolders;
 	try {
 		defaultPthFile = require('../../../data/defaultPaths.json');
 		
@@ -79,7 +80,10 @@ function updatePositionFile(){
 			if(err){
 				console.log(err)
 			} else {
-				fs.writeFile('./data/allPosition.json', JSON.stringify(files, null, '\t'), function(err){
+				filteredFolders = files.filter(function(folder){
+					return !isNaN(Number(folder));
+				});
+				fs.writeFile('./data/allPosition.json', JSON.stringify(filteredFolders, null, '\t'), function(err){
 					if(err){
 						console.log(err)
 					} else {

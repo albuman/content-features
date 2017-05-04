@@ -1,0 +1,1 @@
+cd /D D:\code\git\content-features & git pull origin fs_integration & npm run build & npm start
