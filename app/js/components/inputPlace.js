@@ -2,7 +2,8 @@ import feeds from './feeds';
 import findPosition from './findPosition';
 import feedsList from './feedsList';
 import positionList from './positionList';
-import {actionTypes, feedsQuantity, address, isChromeExtension} from '../const/constants';
+import OpenTabs from './openPosition';
+import {actionTypes, feedsQuantity, address} from '../const/constants';
 
 class InputWrapper extends React.Component {
 	constructor(props){
@@ -14,7 +15,8 @@ class InputWrapper extends React.Component {
 			actionHandler : this.findPositions, // ФУНКЦИЯ ВЫЗЫВАЕМАЯ ПО УМОЛЧАНИЮ ПРИ НАЖАТИИ КНОПКИ "НАЙТИ"
 			actionContainer: positionList, // КОНТЕЙНЕР ДЛЯ РАЗМЕЩЕНИЯ НАЙДЕНЫХ ПОЗИЦИЙ/ОТЗЫВОВ, ПО УМОЛЧАНИЮ ДЛЯ ПОЗИЦИЙ
 			inputValue : '', // ЗНАЧЕНИЕ ДЛЯ ПОИСКА, (КОДЫ ПОЗИЦИЙ/ПАРТНАМБЕРЫ/КОЛИЧЕСТВО ОТЗЫВОВ)
-			fetching : false // ОБОЗНАЧАЕТ СОСТОЯНИЕ ПОИСКА, ЕСЛИ TRUE - ЗНАЧИТ В ПРОЦЕССЕ ПОИСКА, БЛОКИРУЕТСЯ UI
+			fetching : false, // ОБОЗНАЧАЕТ СОСТОЯНИЕ ПОИСКА, ЕСЛИ TRUE - ЗНАЧИТ В ПРОЦЕССЕ ПОИСКА, БЛОКИРУЕТСЯ UI
+			dimensions: {}
 		}
 	}
 	componentDidMount(){
@@ -58,6 +60,7 @@ class InputWrapper extends React.Component {
 	inputHandler(e){
 		this.setState({inputValue: e.target.value}); // СТАВИМ В СОСТОЯНИЕ ЗНАЧЕНИЕ ИНПУТА ДЛЯ ПОИСКА
 	}
+	
 	findFeedbacks(value){
 		this.setState({found : [], fetching : true}); // ЧИСТИМ СТАРЫЕ ПОЗИЦИИ / ПЕРЕКЛЮЧАЕМ В ПРОЦЕСС ПОИСКА ОЗЫВОВ И БЛОКИРУЕМ UI
 		(function find(value){
@@ -67,7 +70,7 @@ class InputWrapper extends React.Component {
 				 	var newFound = found.concat(position); // НОВЫЕ НАЙДЕННЫЕ ПОЗИЦИИ СОЕДИНЯЕМ СО СТАРЫМИ
 				 	this.setState({
 				 		found : newFound
-				 	});
+				 	}, this.setDimensions);
 				 	return newFound; // МЕНЯЕМ СОСТОЯНИЕ НАЙДЕННЫХ ПОЗИЦИЙ НА НОВЫЙ МАСИВ
 				 })
 				 .then((arr)=>{
@@ -111,7 +114,7 @@ class InputWrapper extends React.Component {
 					.then(()=>(findPosition(pos)))
 					.then(position=>(this.setState({
 						found : this.state.found.concat(position)
-					})))
+					}, this.setDimensions)))
 					.then(()=>{
 						if(i == (positionArr.length - 1)){
 							alert('Done');
@@ -123,6 +126,9 @@ class InputWrapper extends React.Component {
 			})
 		}
    	
+	}
+	setDimensions(){
+		this.setState({dimensions: {wHeight: window.innerHeight}})
 	}
     _POST_positionsAjaxSettings(data){
         return {
@@ -140,15 +146,7 @@ class InputWrapper extends React.Component {
 			}
 		}
 	}
-	openTabs(){
-		var openFunc = function(url){
-            isChromeExtension ? chrome.tabs.create({'url': url, active:false}) : window.open(url, '_blank');
-        };
-
-		this.state.found.forEach(position=>{
-			openFunc(position.url)
-		})
-	}
+	
 	render(){
 		const ActionContainer = this.state.actionContainer;
 		return (<div className="input-place">
@@ -157,9 +155,7 @@ class InputWrapper extends React.Component {
 					<a className="input-place__check-button" onClick={this.state.actionHandler.bind(this, this.state.inputValue)}>Найти</a>
 				</div>
 				<ActionContainer found={this.state.found} className='input-place__positions'/>
-				<div className="input-place__open-positions">
-					<a className='input-place__open-button' onClick={this.openTabs.bind(this)}>Открыть</a>
-				</div>
+				<OpenTabs found={this.state.found} wHeight={this.state.dimensions.wHeight}/>
 				{this.state.fetching ? <div className="mask"></div> : null}
 			</div>)
 	}

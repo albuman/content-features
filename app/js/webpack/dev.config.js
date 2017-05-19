@@ -20,11 +20,7 @@ module.exports = {
 		],
 	},
 	plugins: [
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
-            }
-        }),
+        
         new webpack.ProvidePlugin({
             $ : "jquery",
 			_ : "lodash",
