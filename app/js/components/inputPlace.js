@@ -157,7 +157,9 @@ class InputWrapper extends React.Component {
 					<a className="input-place__check-button" onClick={this.state.actionHandler.bind(this, this.state.inputValue)}>Найти</a>
 				</div>
 				<ActionContainer found={this.state.found} className='input-place__positions'/>
-				<a className='input-place__open-button' onClick={this.openTabs.bind(this)}>Открыть</a>
+				<div className="input-place__open-positions">
+					<a className='input-place__open-button' onClick={this.openTabs.bind(this)}>Открыть</a>
+				</div>
 				{this.state.fetching ? <div className="mask"></div> : null}
 			</div>)
 	}
