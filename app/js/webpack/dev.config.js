@@ -5,9 +5,8 @@ module.exports = {
 	entry:  './app/js/main.js',
 	output: {
 		path: outputPath,
-		filename: 'bundle.js'
+		filename: 'bundle.js',
 	},
-	
 	module: {
 		loaders: [
 			{

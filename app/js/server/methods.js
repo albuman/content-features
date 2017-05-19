@@ -16,7 +16,7 @@ function getPathFile(respond, callback) {
 
 
 	try{
-        defaultPath = require('../../../'+defaultPathFileName);
+        defaultPath = require('../../../' + defaultPathFileName);
         if(defaultPath.folder && defaultPath.drive) {
             stats = fs.statSync(defaultPath.folder);
             if(stats.isDirectory()){
@@ -151,7 +151,7 @@ function handlePOST (obj, respond){
 					} catch (err) {
 						if (err && err.code == 'ENOENT') {
 							fs.mkdirSync(path);
-							console.log(err)
+							console.log(err);
 							if (needCallback(path)) {
 								writeFile(path)
 							}
@@ -169,6 +169,23 @@ function handlePOST (obj, respond){
 				
 			} else {
                 respond(500, createReadable('Не указано имя файла или имя папки!'))
+			}
+		},
+		checkCurrentPosition: function(data, respond){
+        	var defaultPaths;
+        	
+        	try{
+        		defaultPaths = defaultPath = require('../../../' + defaultPathFileName);
+        		fs.readdir(defaultPaths.folder, function(err, files){
+        			if(err){
+        				respond(500, createReadable(err.message));
+					}else{
+        				respond(200, createReadable(files.join(' ')));
+					}
+					
+				})
+			} catch(e){
+        		console.log(e);
 			}
 		},
 

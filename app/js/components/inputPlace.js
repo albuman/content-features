@@ -87,7 +87,12 @@ class InputWrapper extends React.Component {
 		this.setState({found : [], fetching : true}); // ЧИСТИМ СТАРЫЕ ПОЗИЦИИ / ПЕРЕКЛЮЧАЕМ В ПРОЦЕСС ПОИСКА ПОЗИЦИЙ И БЛОКИРУЕМ UI
 		var positions = inputValue;
 		if(positions.length < 1){ // ЕСЛИ ВВЕДЕНО МЕНЬШЕ 1-ГО ЗНАКА (НИЕГО НЕ ВВЕДЕНО) - ЗАПУСКАЕМ ПОИСК С ПОЗИЦИЯМИ В ФАЙЛЕ data/dir.txt
-			$.get(address.lastChekout)
+			$.ajax({
+				url: address.local,
+				type: 'post',
+				data: JSON.stringify({checkCurrentPosition: true}),
+				contentType: 'application/json'
+			})
 			.done(text=>{
 				this.setState({inputValue : text.replace(/\s/g, ' ')}); // СТАВИМ В ИНПУТ ЗНАЧЕНИЕ ФАЙЛА ЗАМЕНЯЕМ ЛИШНИЕ ПРОБЕЛЫ НА ОДИН ПРОБЕЛ ИСПОЛЬЗУЯ РЕГ. ВЫРАЖЕНИЯ
 				return check.call(this, text)
